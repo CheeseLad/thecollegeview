@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/article.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class ArticleDetailScreen extends StatelessWidget {
   final Article article;
@@ -30,9 +32,9 @@ class ArticleDetailScreen extends StatelessWidget {
               SizedBox(height: 10),
               Text(formattedDate),
               SizedBox(height: 10),
-              Text(
-                article.content,
-                style: TextStyle(fontSize: 16),
+              HtmlWidget(article.content,
+                renderMode: RenderMode.column,
+                textStyle: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 10),
               TextButton(

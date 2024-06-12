@@ -7,6 +7,7 @@ import 'providers/article_provider.dart';
 import 'models/article.dart';
 import 'screens/article_detail_screen.dart'; // Import the new screen
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,36 +32,31 @@ class ArticlesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Website Name'), // Website name to the left
+        title: Text('The College View'), // Website name to the left
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'assets/logo.png', // Path to your logo image
-                    height: 50,
-                    width: 50,
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Website Name',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+ DrawerHeader(
+  //decoration: BoxDecoration(
+    //color: Colors.white, // Change the color of the drawer header
+  //),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Center( // Center the image
+        child: Image.asset(
+          'assets/logo.png', // Path to your logo image
+          height: 135, // Adjust the height of the image
+          width: 300, // Adjust the width of the image
+        ),
+      ),
+    ],
+  ),
+),
+
+
             ListTile(
               title: Text('All Articles'),
               onTap: () {
@@ -79,19 +75,61 @@ class ArticlesScreen extends StatelessWidget {
             }).toList(),
             SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FaIcon(FontAwesomeIcons.facebook, size: 30),
-                SizedBox(width: 10),
-                FaIcon(FontAwesomeIcons.twitter, size: 30),
-                SizedBox(width: 10),
-                FaIcon(FontAwesomeIcons.instagram, size: 30),
-                SizedBox(width: 10),
-                FaIcon(FontAwesomeIcons.linkedin, size: 30),
-                SizedBox(width: 10),
-                FaIcon(FontAwesomeIcons.youtube, size: 30),
-              ],
-            ),
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    GestureDetector(
+      onTap: () {
+        _launchURL('https://facebook.com/thecollegeview');
+      },
+      child: Padding(
+        padding: EdgeInsets.all(10.0), // Add padding around the icon
+        child: FaIcon(FontAwesomeIcons.facebook, size: 30),
+      ),
+    ),
+    SizedBox(width: 10),
+    GestureDetector(
+      onTap: () {
+        _launchURL('https://twitter.com/thecollegeview');
+      },
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: FaIcon(FontAwesomeIcons.xTwitter, size: 30),
+      ),
+    ),
+    SizedBox(width: 10),
+    GestureDetector(
+      onTap: () {
+        _launchURL('https://instagram.com/thecollegeview');
+      },
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: FaIcon(FontAwesomeIcons.instagram, size: 30),
+      ),
+    ),
+    SizedBox(width: 10),
+    GestureDetector(
+      onTap: () {
+        _launchURL('https://youtube.com/thecollegeview');
+      },
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: FaIcon(FontAwesomeIcons.youtube, size: 30),
+      ),
+    ),
+    SizedBox(width: 10),
+    GestureDetector(
+      onTap: () {
+        _launchURL('https://thecollegeview.ie');
+      },
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: FaIcon(FontAwesomeIcons.link, size: 30),
+      ),
+    ),
+   
+  ],
+),
+
           ],
         ),
       ),
@@ -106,7 +144,8 @@ class ArticlesScreen extends StatelessWidget {
                         itemCount: articleProvider.articles.length,
                         itemBuilder: (context, index) {
                           Article article = articleProvider.articles[index];
-                          String previewText = article.content.split(' ').take(30).join(' ') + '...';
+                          //String previewText = article.content.split(' ').take(30).join(' ') + '...';
+                          String previewText = _extractTextFromHtml(article.content).split(' ').take(35).join(' ') + '...';
                           String formattedDate = '⏰' + DateFormat('MMMM d, y').format(DateTime.parse(article.date));
 
                           return GestureDetector(
@@ -127,7 +166,17 @@ class ArticlesScreen extends StatelessWidget {
                                     SizedBox(height: 10),
                                     Text(formattedDate),
                                     SizedBox(height: 10),
-                                    Text(previewText),
+                                    //Text(previewText),
+                                    HtmlWidget(article.content.split(' ').take(35).join(' ') + '...',
+                                    renderMode: RenderMode.column,
+                                    textStyle: TextStyle(fontSize: 16),
+                                    customStylesBuilder: (element) {
+                                      if (element.classes.contains('wp-block-image')) {
+                                        return {'display': 'none'};
+                                      }
+                                      return null;
+                                    },
+                                    ),
                                   ],
                                 ),
                               ),
@@ -153,5 +202,20 @@ class ArticlesScreen extends StatelessWidget {
                   ],
                 ),
     );
+  }
+
+  String _extractTextFromHtml(String htmlContent) {
+    RegExp regex = RegExp(r'<p>(.*?)</p>');
+    Iterable<Match> matches = regex.allMatches(htmlContent);
+    List<String> texts = matches.map((match) => match.group(1) ?? '').toList();
+    return texts.join(' ');
+  }
+
+    void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

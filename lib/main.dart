@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 import 'package:intl/intl.dart'; // Import the intl package
 import 'providers/article_provider.dart';
+import 'screens/search_page.dart';
 import 'models/article.dart';
 import 'screens/article_detail_screen.dart'; // Import the new screen
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -33,6 +34,17 @@ class ArticlesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('The College View'), // Website name to the left
+        actions: [
+    IconButton(
+      icon: Icon(Icons.search),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SearchPage()),
+        );
+      },
+    ),
+  ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -77,55 +89,55 @@ class ArticlesScreen extends StatelessWidget {
             Row(
   mainAxisAlignment: MainAxisAlignment.center,
   children: [
-    GestureDetector(
-      onTap: () {
-        _launchURL('https://facebook.com/thecollegeview');
-      },
-      child: Padding(
-        padding: EdgeInsets.all(10.0), // Add padding around the icon
-        child: FaIcon(FontAwesomeIcons.facebook, size: 30),
-      ),
-    ),
-    SizedBox(width: 10),
-    GestureDetector(
-      onTap: () {
-        _launchURL('https://twitter.com/thecollegeview');
-      },
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: FaIcon(FontAwesomeIcons.xTwitter, size: 30),
-      ),
-    ),
-    SizedBox(width: 10),
-    GestureDetector(
-      onTap: () {
-        _launchURL('https://instagram.com/thecollegeview');
-      },
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: FaIcon(FontAwesomeIcons.instagram, size: 30),
-      ),
-    ),
-    SizedBox(width: 10),
-    GestureDetector(
-      onTap: () {
-        _launchURL('https://youtube.com/thecollegeview');
-      },
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: FaIcon(FontAwesomeIcons.youtube, size: 30),
-      ),
-    ),
-    SizedBox(width: 10),
-    GestureDetector(
-      onTap: () {
-        _launchURL('https://thecollegeview.ie');
-      },
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: FaIcon(FontAwesomeIcons.link, size: 30),
-      ),
-    ),
+    InkWell(
+  onTap: () {
+    _launchURL('https://facebook.com/thecollegeview');
+  },
+  child: Padding(
+    padding: EdgeInsets.all(10.0), // Add padding around the icon
+    child: FaIcon(FontAwesomeIcons.facebook, size: 30),
+  ),
+),
+SizedBox(width: 10),
+InkWell(
+  onTap: () {
+    _launchURL('https://twitter.com/thecollegeview');
+  },
+  child: Padding(
+    padding: EdgeInsets.all(10.0),
+    child: FaIcon(FontAwesomeIcons.xTwitter, size: 30),
+  ),
+),
+SizedBox(width: 10),
+InkWell(
+  onTap: () {
+    _launchURL('https://instagram.com/thecollegeview');
+  },
+  child: Padding(
+    padding: EdgeInsets.all(10.0),
+    child: FaIcon(FontAwesomeIcons.instagram, size: 30),
+  ),
+),
+SizedBox(width: 10),
+InkWell(
+  onTap: () {
+    _launchURL('https://youtube.com/thecollegeview');
+  },
+  child: Padding(
+    padding: EdgeInsets.all(10.0),
+    child: FaIcon(FontAwesomeIcons.youtube, size: 30),
+  ),
+),
+SizedBox(width: 10),
+InkWell(
+  onTap: () {
+    _launchURL('https://thecollegeview.ie');
+  },
+  child: Padding(
+    padding: EdgeInsets.all(10.0),
+    child: FaIcon(FontAwesomeIcons.globe, size: 30),
+  ),
+),
    
   ],
 ),

@@ -6,6 +6,9 @@ import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher pack
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:share_plus/share_plus.dart'; // Import the share_plus package
+import 'package:html/dom.dart' as dom;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ArticleDetailScreen extends StatelessWidget {
   final Article article;
@@ -31,7 +34,27 @@ class ArticleDetailScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
-              Text(formattedDate),
+Row(
+                            children: [
+                              Text(formattedDate),
+                              SizedBox(width: 10),
+                              FutureBuilder<String>(
+                                future: fetchAuthorName(article.author),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error');
+                                  } else {
+                                    return Text('by ${snapshot.data}',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey[600]));
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
               SizedBox(height: 10),
               HtmlWidget(article.content,
                 renderMode: RenderMode.column,
@@ -67,6 +90,17 @@ GestureDetector(
         ),
       ),
     );
+  }
+
+    Future<String> fetchAuthorName(int authorId) async {
+  final response = await http.get(Uri.parse('https://thecollegeview.ie/wp-json/wp/v2/users/$authorId'));
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    return data['name'];
+  } else {
+    throw Exception('Failed to load author');
+  }
   }
 
   void _launchURL(String url) async {

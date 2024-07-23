@@ -1,0 +1,72 @@
+// content_page.dart
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class ContentPage extends StatefulWidget {
+  final String slug;
+
+  ContentPage({required this.slug});
+
+  @override
+  _ContentPageState createState() => _ContentPageState();
+}
+
+class _ContentPageState extends State<ContentPage> {
+  Future<Map<String, dynamic>> fetchContent(String slug) async {
+    final response = await http.get(
+      Uri.parse('https://thecollegeview.ie/wp-json/wp/v2/pages/?slug=$slug'),
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      if (data.isNotEmpty) {
+        return data[0];
+      } else {
+        throw Exception('No content found');
+      }
+    } else {
+      throw Exception('Failed to load content');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Content Renderer'),
+      ),
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: fetchContent(widget.slug),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No content found'));
+          } else {
+            final content = snapshot.data!;
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      content['title']['rendered'],
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 20),
+                    Text(content['content']['rendered']),
+                  ],
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+}

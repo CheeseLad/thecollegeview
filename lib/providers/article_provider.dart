@@ -47,12 +47,32 @@ class ArticleProvider with ChangeNotifier {
     }
   }
 
+  Future<void> fetchStickyArticles() async {
+    const url = 'https://thecollegeview.ie/wp-json/wp/v2/posts?sticky=true&_fields=id,date,title,content,link,author,featured_media';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        List<Article> loadedArticles = (json.decode(response.body) as List)
+            .map((data) => Article.fromJson(data))
+            .toList();
+        _articles = loadedArticles;
+        _error = null;
+      } else {
+        _error = 'Failed to load sticky articles';
+      }
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      notifyListeners();
+    }
+  }
+
   Future<void> fetchArticles() async {
     _loading = true;
     notifyListeners();
 
     final categoryFilter = _selectedCategory != null ? '&categories=$_selectedCategory' : '';
-    final url = 'https://thecollegeview.ie/wp-json/wp/v2/posts/?page=$_currentPage&per_page=10$categoryFilter&_fields=id,date,title,content,link';
+    final url = 'https://thecollegeview.ie/wp-json/wp/v2/posts/?page=$_currentPage&per_page=10$categoryFilter&_fields=id,date,title,content,link,author,featured_media';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

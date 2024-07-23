@@ -188,7 +188,7 @@ class ArticlesScreen extends StatelessWidget {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ArticleDetailScreen(article: article),
+            builder: (context) => ArticleDetailScreen(article: article, categoryName: categoryName),
           ),
         ),
         child: Card(

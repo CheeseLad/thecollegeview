@@ -71,7 +71,7 @@ return GestureDetector(
                             onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ArticleDetailScreen(article: article),
+                                builder: (context) => ArticleDetailScreen(article: article, categoryName: 'Search Results'),
                               ),
                             ),
                             child: Card(

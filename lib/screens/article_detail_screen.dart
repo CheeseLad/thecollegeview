@@ -13,7 +13,9 @@ import 'dart:convert';
 class ArticleDetailScreen extends StatelessWidget {
   final Article article;
 
-  ArticleDetailScreen({required this.article});
+  final String categoryName;
+
+  ArticleDetailScreen({required this.article, required this.categoryName});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ Row(
                                   } else if (snapshot.hasError) {
                                     return Text('Error');
                                   } else {
-                                    return Text('by ${snapshot.data}',
+                                    return Text('by ${snapshot.data} in $categoryName',
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.grey[600]));
@@ -56,10 +58,20 @@ Row(
                             ],
                           ),
               SizedBox(height: 10),
-              HtmlWidget(article.content,
-                renderMode: RenderMode.column,
-                textStyle: TextStyle(fontSize: 16),
-              ),
+HtmlWidget(
+  article.content,
+  renderMode: RenderMode.column,
+  textStyle: TextStyle(fontSize: 16),
+  customStylesBuilder: (element) {
+    if (element.localName == 'img') {
+      return {
+        'border-radius': '10px', // Adjust the radius as needed
+      };
+    }
+    return null;
+  },
+),
+
               SizedBox(height: 10),
 GestureDetector(
   onTap: () {

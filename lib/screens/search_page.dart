@@ -65,7 +65,7 @@ leading: IconButton(
         itemBuilder: (context, index) {
           final article = _filteredArticles[index];
 
-          String previewText = _extractTextFromHtml(article.content).split(' ').take(35).join(' ') + '...';
+          // String previewText = _extractTextFromHtml(article.content).split(' ').take(35).join(' ') + '...';
                           String formattedDate = '⏰' + DateFormat('MMMM d, y').format(DateTime.parse(article.date));
 return GestureDetector(
                             onTap: () => Navigator.push(

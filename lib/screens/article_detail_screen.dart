@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import '../models/article.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
+// import 'package:flutter_html/flutter_html.dart';
 //import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:share_plus/share_plus.dart'; // Import the share_plus package
+// import 'package:html/dom.dart' as dom;
 //import 'package:html/dom.dart' as dom;
 import 'package:http/http.dart' as http;
 import 'dart:convert';

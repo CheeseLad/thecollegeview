@@ -10,7 +10,7 @@ import 'screens/search_page.dart';
 import 'models/article.dart';
 import 'screens/article_detail_screen.dart'; // Import the new screen
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-//import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:html/dom.dart' as dom;
 import 'package:http/http.dart' as http;
@@ -182,7 +182,7 @@ class ArticlesScreen extends StatelessWidget {
     itemCount: articleProvider.articles.length,
     itemBuilder: (context, index) {
       Article article = articleProvider.articles[index];
-      //String previewText =
+      String previewText =
           _extractTextFromHtml(article.content).split(' ').take(35).join(' ') +
           '...';
       String formattedDate = '⏰' +

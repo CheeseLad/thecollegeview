@@ -1,7 +1,8 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:thecollegeview/providers/page_provider.dart';
+import 'package:thecollegeview/screens/submit_article.dart';
+//import 'package:thecollegeview/providers/page_provider.dart';
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 import 'package:intl/intl.dart'; // Import the intl package
 import 'providers/article_provider.dart';
@@ -9,7 +10,7 @@ import 'screens/search_page.dart';
 import 'models/article.dart';
 import 'screens/article_detail_screen.dart'; // Import the new screen
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:html/dom.dart' as dom;
 import 'package:http/http.dart' as http;
@@ -100,13 +101,17 @@ class ArticlesScreen extends StatelessWidget {
                 },
               );
             }).toList(),
-            //ListTile(
-            //  title: Text('About'),
-            //  onTap: () {
-            //    ContentPage(slug: 'about');
-            //    Navigator.pop(context); // Close the drawer
-            //  },
-            //),
+            ListTile(
+              title: Text('Submit Article'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ArticleSubmissionPage(),
+                  ),
+                );
+              },
+            ),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -177,9 +182,9 @@ class ArticlesScreen extends StatelessWidget {
     itemCount: articleProvider.articles.length,
     itemBuilder: (context, index) {
       Article article = articleProvider.articles[index];
-      //String previewText =
-      //    _extractTextFromHtml(article.content).split(' ').take(35).join(' ') +
-      //    '...';
+      String previewText =
+          _extractTextFromHtml(article.content).split(' ').take(35).join(' ') +
+          '...';
       String formattedDate = '⏰' +
           DateFormat('MMMM d, y').format(DateTime.parse(article.date));
 

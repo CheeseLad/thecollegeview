@@ -28,16 +28,20 @@ class _SearchPageState extends State<SearchPage> {
     super.dispose();
   }
 
-  void _onSearchChanged() {
-    final query = _searchController.text.toLowerCase();
+  void _onSearchChanged() async {
+    final query = _searchController.text;
+    if (query.isEmpty) {
+      setState(() {
+        _filteredArticles = [];
+      });
+      return;
+    }
+
     final articleProvider = Provider.of<ArticleProvider>(context, listen: false);
+    await articleProvider.searchArticles(query);
 
     setState(() {
-      _filteredArticles = articleProvider.articles.where((article) {
-        final title = article.title.toLowerCase();
-        final content = article.content.toLowerCase();
-        return title.contains(query) || content.contains(query);
-      }).toList();
+      _filteredArticles = articleProvider.articles;
     });
   }
 
@@ -52,64 +56,56 @@ class _SearchPageState extends State<SearchPage> {
             border: InputBorder.none,
           ),
         ),
-leading: IconButton(
-  icon: Icon(Icons.arrow_back),  // You can use Icons.arrow_back for a back arrow icon
-  onPressed: () {
-    Navigator.of(context).pop();  // Navigate back to the previous screen
-  },
-),
-
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),  // You can use Icons.arrow_back for a back arrow icon
+          onPressed: () {
+            Navigator.of(context).pop();  // Navigate back to the previous screen
+          },
+        ),
       ),
       body: ListView.builder(
         itemCount: _filteredArticles.length,
         itemBuilder: (context, index) {
           final article = _filteredArticles[index];
 
-          // String previewText = _extractTextFromHtml(article.content).split(' ').take(35).join(' ') + '...';
-                          String formattedDate = '⏰' + DateFormat('MMMM d, y').format(DateTime.parse(article.date));
-return GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ArticleDetailScreen(article: article, categoryName: 'Search Results'),
-                              ),
-                            ),
-                            child: Card(
-                              margin: EdgeInsets.all(10),
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(article.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                    SizedBox(height: 10),
-                                    Text(formattedDate),
-                                    SizedBox(height: 10),
-                                    //Text(previewText),
-                                    HtmlWidget(article.content.split(' ').take(35).join(' ') + '...',
-                                    renderMode: RenderMode.column,
-                                    textStyle: TextStyle(fontSize: 16),
-                                    customStylesBuilder: (element) {
-                                      if (element.classes.contains('wp-block-image')) {
-                                        return {'display': 'none'};
-                                      }
-                                      return null;
-                                    },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
+          String formattedDate = '⏰' + DateFormat('MMMM d, y').format(DateTime.parse(article.date));
+
+          return GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ArticleDetailScreen(article: article, categoryName: 'Search Results'),
+              ),
+            ),
+            child: Card(
+              margin: EdgeInsets.all(10),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(article.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 10),
+                    Text(formattedDate),
+                    SizedBox(height: 10),
+                    HtmlWidget(
+                      article.content.split(' ').take(35).join(' ') + '...',
+                      renderMode: RenderMode.column,
+                      textStyle: TextStyle(fontSize: 16),
+                      customStylesBuilder: (element) {
+                        if (element.classes.contains('wp-block-image')) {
+                          return {'display': 'none'};
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         },
       ),
     );
   }
 }
-
-  String _extractTextFromHtml(String htmlContent) {
-    RegExp regex = RegExp(r'<p>(.*?)</p>');
-    Iterable<Match> matches = regex.allMatches(htmlContent);
-    List<String> texts = matches.map((match) => match.group(1) ?? '').toList();
-    return texts.join(' ');
-  }

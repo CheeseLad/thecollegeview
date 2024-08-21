@@ -93,6 +93,22 @@ class ArticleProvider with ChangeNotifier {
     }
   }
 
+  Future<void> searchArticles(String searchQuery) async {
+    final url = 'https://thecollegeview.ie/wp-json/wp/v2/posts?search=$searchQuery'; // Update with your WordPress site URL
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        _articles = data.map((json) => Article.fromJson(json)).toList();
+        notifyListeners();
+      } else {
+        throw Exception('Failed to load articles');
+      }
+    } catch (error) {
+      print('Error searching articles: $error');
+    }
+  }
+
   void nextPage() {
     if (_currentPage < _totalPages) {
       _currentPage++;

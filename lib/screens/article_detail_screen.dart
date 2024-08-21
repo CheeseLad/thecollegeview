@@ -17,11 +17,11 @@ class ArticleDetailScreen extends StatelessWidget {
 
   final String categoryName;
 
-  ArticleDetailScreen({required this.article, required this.categoryName});
+  const ArticleDetailScreen({super.key, required this.article, required this.categoryName});
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = '⏰' + DateFormat('MMMM d, y').format(DateTime.parse(article.date));
+    String formattedDate = '⏰${DateFormat('MMMM d, y').format(DateTime.parse(article.date))}';
 
     return Scaffold(
       appBar: AppBar(
@@ -35,20 +35,20 @@ class ArticleDetailScreen extends StatelessWidget {
             children: [
               Text(
                 article.title,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 Row(
                             children: [
                               Text(formattedDate),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               FutureBuilder<String>(
                                 future: fetchAuthorName(article.author),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
+                                    return const CircularProgressIndicator();
                                   } else if (snapshot.hasError) {
-                                    return Text('Error');
+                                    return const Text('Error');
                                   } else {
                                     return Text('by ${snapshot.data} in $categoryName',
                                         style: TextStyle(
@@ -59,11 +59,11 @@ Row(
                               ),
                             ],
                           ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 HtmlWidget(
   article.content,
   renderMode: RenderMode.column,
-  textStyle: TextStyle(fontSize: 16),
+  textStyle: const TextStyle(fontSize: 16),
   customStylesBuilder: (element) {
     if (element.localName == 'img') {
       return {
@@ -74,18 +74,18 @@ HtmlWidget(
   },
 ),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 GestureDetector(
   onTap: () {
     Share.share(article.link);
   },
   child: Container(
     width: double.infinity, // Stretches across the screen horizontally
-    padding: EdgeInsets.symmetric(vertical: 16.0), // Vertical padding for spacing
+    padding: const EdgeInsets.symmetric(vertical: 16.0), // Vertical padding for spacing
     decoration: BoxDecoration(
       border: Border.all(color: Colors.black, width: 1.0), // Square border
     ),
-    child: Row(
+    child: const Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(Icons.share), // Share icon

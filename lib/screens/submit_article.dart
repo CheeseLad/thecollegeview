@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ArticleSubmissionPage extends StatefulWidget {
+  const ArticleSubmissionPage({super.key});
+
   @override
   _ArticleSubmissionPageState createState() => _ArticleSubmissionPageState();
 }
@@ -32,11 +34,11 @@ class _ArticleSubmissionPageState extends State<ArticleSubmissionPage> {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Submission Successful')),
+          const SnackBar(content: Text('Submission Successful')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Submission Failed')),
+          const SnackBar(content: Text('Submission Failed')),
         );
       }
     }
@@ -46,7 +48,7 @@ class _ArticleSubmissionPageState extends State<ArticleSubmissionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Submit Your Article'),
+        title: const Text('Submit Your Article'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -61,7 +63,7 @@ class _ArticleSubmissionPageState extends State<ArticleSubmissionPage> {
               ),
               TextFormField(
                 controller: _titleController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Enter the title of the article',
                 ),
@@ -72,14 +74,14 @@ class _ArticleSubmissionPageState extends State<ArticleSubmissionPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'Author Name:',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               TextFormField(
                 controller: _authorController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Enter the author\'s name',
                 ),
@@ -90,14 +92,14 @@ class _ArticleSubmissionPageState extends State<ArticleSubmissionPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'Category:',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               DropdownButtonFormField<String>(
                 value: null,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Select a category',
                 ),
@@ -120,7 +122,7 @@ class _ArticleSubmissionPageState extends State<ArticleSubmissionPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'Content:',
                 style: Theme.of(context).textTheme.titleLarge,
@@ -128,7 +130,7 @@ class _ArticleSubmissionPageState extends State<ArticleSubmissionPage> {
               TextFormField(
                 controller: _contentController,
                 maxLines: 8,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Enter the content of the article',
                 ),
@@ -139,10 +141,10 @@ class _ArticleSubmissionPageState extends State<ArticleSubmissionPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _submitForm,
-                child: Text('Submit'),
+                child: const Text('Submit'),
               ),
             ],
           ),

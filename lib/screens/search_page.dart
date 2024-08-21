@@ -1,18 +1,21 @@
+// lib/screens/search_page.dart
+
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/article.dart';
 import '../providers/article_provider.dart';
-import 'article_detail_screen.dart'; // Import the new screen
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import '../widgets/search_bar.dart' as custom_search_bar; // Alias this import
+import '../widgets/article_list.dart';
 
 class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   List<Article> _filteredArticles = [];
 
   @override
@@ -49,63 +52,20 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
+        title: custom_search_bar.SearchBar( // Use the aliased import here
           controller: _searchController,
-          decoration: InputDecoration(
-            hintText: 'Search articles...',
-            border: InputBorder.none,
-          ),
+          onSearchChanged: _onSearchChanged,
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),  // You can use Icons.arrow_back for a back arrow icon
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop();  // Navigate back to the previous screen
+            Navigator.of(context).pop();
           },
         ),
       ),
-      body: ListView.builder(
-        itemCount: _filteredArticles.length,
-        itemBuilder: (context, index) {
-          final article = _filteredArticles[index];
-
-          String formattedDate = '⏰' + DateFormat('MMMM d, y').format(DateTime.parse(article.date));
-
-          return GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ArticleDetailScreen(article: article, categoryName: 'Search Results'),
-              ),
-            ),
-            child: Card(
-              margin: EdgeInsets.all(10),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(article.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10),
-                    Text(formattedDate),
-                    SizedBox(height: 10),
-                    HtmlWidget(
-                      article.content.split(' ').take(35).join(' ') + '...',
-                      renderMode: RenderMode.column,
-                      textStyle: TextStyle(fontSize: 16),
-                      customStylesBuilder: (element) {
-                        if (element.classes.contains('wp-block-image')) {
-                          return {'display': 'none'};
-                        }
-                        return null;
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+      body: _filteredArticles.isEmpty
+          ? const Center(child: Text('No articles found.'))
+          : ArticleList(articles: _filteredArticles, categoryName: 'Search Results'),
     );
   }
 }

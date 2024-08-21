@@ -7,7 +7,7 @@ import 'dart:convert';
 class ContentPage extends StatefulWidget {
   final String slug;
 
-  ContentPage({required this.slug});
+  const ContentPage({super.key, required this.slug});
 
   @override
   _ContentPageState createState() => _ContentPageState();
@@ -35,17 +35,17 @@ class _ContentPageState extends State<ContentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Content Renderer'),
+        title: const Text('Content Renderer'),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchContent(widget.slug),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No content found'));
+            return const Center(child: Text('No content found'));
           } else {
             final content = snapshot.data!;
             return Padding(
@@ -56,9 +56,9 @@ class _ContentPageState extends State<ContentPage> {
                   children: [
                     Text(
                       content['title']['rendered'],
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text(content['content']['rendered']),
                   ],
                 ),

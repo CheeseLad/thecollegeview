@@ -1,5 +1,3 @@
-// lib/article_submission_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,18 +15,18 @@ class _ArticleSubmissionPageState extends State<ArticleSubmissionPage> {
   final _contentController = TextEditingController();
   final _categoryController = TextEditingController();
 
-  // Replace with your Google Form's action URL
-  final String _formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSf-7_TjFgoBVorwVl7NkPFWO_yJGVNGyMVKFFX47QciTaV1pg/formResponse';
+  final String _formUrl =
+      'https://docs.google.com/forms/d/e/1FAIpQLSf-7_TjFgoBVorwVl7NkPFWO_yJGVNGyMVKFFX47QciTaV1pg/formResponse';
 
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       final response = await http.post(
         Uri.parse(_formUrl),
         body: {
-          'entry.1771027269': _titleController.text, // Replace with actual entry ID
-          'entry.447857319': _authorController.text, // Replace with actual entry ID
-          'entry.888149517': _categoryController.text, // Replace with actual entry ID
-          'entry.1424180295': _contentController.text, // Replace with actual entry ID
+          'entry.1771027269': _titleController.text,
+          'entry.447857319': _authorController.text,
+          'entry.888149517': _categoryController.text,
+          'entry.1424180295': _contentController.text,
         },
       );
 

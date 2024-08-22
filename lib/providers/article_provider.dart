@@ -1,4 +1,3 @@
-// providers/article_provider.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -28,7 +27,8 @@ class ArticleProvider with ChangeNotifier {
   }
 
   Future<void> fetchCategories() async {
-    const url = 'https://thecollegeview.ie/wp-json/wp/v2/categories?include=4,7,5,687,6,220,68,9890,90,6880';
+    const url =
+        'https://thecollegeview.ie/wp-json/wp/v2/categories?include=4,7,5,687,6,220,68,9890,90,6880';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -48,7 +48,8 @@ class ArticleProvider with ChangeNotifier {
   }
 
   Future<void> fetchStickyArticles() async {
-    const url = 'https://thecollegeview.ie/wp-json/wp/v2/posts?sticky=true&_fields=id,date,title,content,link,author,featured_media';
+    const url =
+        'https://thecollegeview.ie/wp-json/wp/v2/posts?sticky=true&_fields=id,date,title,content,link,author,featured_media';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -71,8 +72,10 @@ class ArticleProvider with ChangeNotifier {
     _loading = true;
     notifyListeners();
 
-    final categoryFilter = _selectedCategory != null ? '&categories=$_selectedCategory' : '';
-    final url = 'https://thecollegeview.ie/wp-json/wp/v2/posts/?page=$_currentPage&per_page=10$categoryFilter&_fields=id,date,title,content,link,author,featured_media';
+    final categoryFilter =
+        _selectedCategory != null ? '&categories=$_selectedCategory' : '';
+    final url =
+        'https://thecollegeview.ie/wp-json/wp/v2/posts/?page=$_currentPage&per_page=10$categoryFilter&_fields=id,date,title,content,link,author,featured_media';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -94,7 +97,8 @@ class ArticleProvider with ChangeNotifier {
   }
 
   Future<void> searchArticles(String searchQuery) async {
-    final url = 'https://thecollegeview.ie/wp-json/wp/v2/posts?search=$searchQuery'; // Update with your WordPress site URL
+    final url =
+        'https://thecollegeview.ie/wp-json/wp/v2/posts?search=$searchQuery';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

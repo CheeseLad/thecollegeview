@@ -1,10 +1,8 @@
-// lib/screens/search_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/article.dart';
 import '../providers/article_provider.dart';
-import '../widgets/search_bar.dart' as custom_search_bar; // Alias this import
+import '../widgets/search_bar.dart' as custom_search_bar;
 import '../widgets/article_list.dart';
 
 class SearchPage extends StatefulWidget {
@@ -40,7 +38,8 @@ class _SearchPageState extends State<SearchPage> {
       return;
     }
 
-    final articleProvider = Provider.of<ArticleProvider>(context, listen: false);
+    final articleProvider =
+        Provider.of<ArticleProvider>(context, listen: false);
     await articleProvider.searchArticles(query);
 
     setState(() {
@@ -52,7 +51,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: custom_search_bar.SearchBar( // Use the aliased import here
+        title: custom_search_bar.SearchBar(
           controller: _searchController,
           onSearchChanged: _onSearchChanged,
         ),
@@ -65,7 +64,8 @@ class _SearchPageState extends State<SearchPage> {
       ),
       body: _filteredArticles.isEmpty
           ? const Center(child: Text('No articles found.'))
-          : ArticleList(articles: _filteredArticles, categoryName: 'Search Results'),
+          : ArticleList(
+              articles: _filteredArticles, categoryName: 'Search Results'),
     );
   }
 }

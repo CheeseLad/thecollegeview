@@ -23,13 +23,13 @@ class Category {
   static List<Category> fromJsonList(List<dynamic> jsonList) {
     final categories = jsonList.map((data) => Category.fromJson(data)).toList();
 
-    // Organize categories into a hierarchy
     final Map<int, Category> categoryMap = {
       for (var category in categories) category.id: category
     };
 
     for (var category in categories) {
-      if (category.parent != null && categoryMap.containsKey(category.parent!)) {
+      if (category.parent != null &&
+          categoryMap.containsKey(category.parent!)) {
         categoryMap[category.parent!]!.subcategories.add(category);
       }
     }

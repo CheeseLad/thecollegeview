@@ -7,7 +7,14 @@ class Article {
   final int author;
   final int featured_media;
 
-  Article({required this.id, required this.date, required this.title, required this.content, required this.link, required this.author, required this.featured_media});
+  Article(
+      {required this.id,
+      required this.date,
+      required this.title,
+      required this.content,
+      required this.link,
+      required this.author,
+      required this.featured_media});
 
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
@@ -21,4 +28,3 @@ class Article {
     );
   }
 }
-

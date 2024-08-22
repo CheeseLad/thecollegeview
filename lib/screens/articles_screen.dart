@@ -1,5 +1,3 @@
-// lib/screens/articles_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:thecollegeview/screens/search_page.dart';
 import '../widgets/cv_navigation_drawer.dart';
@@ -28,7 +26,10 @@ class ArticlesScreen extends StatelessWidget {
         ],
       ),
       drawer: const CVNavigationDrawer(),
-      body: ArticleList(categoryName: categoryName, articles: [],),
+      body: ArticleList(
+        categoryName: categoryName,
+        articles: [],
+      ),
     );
   }
 }

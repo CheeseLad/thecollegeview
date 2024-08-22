@@ -1,5 +1,3 @@
-// content_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -56,7 +54,8 @@ class _ContentPageState extends State<ContentPage> {
                   children: [
                     Text(
                       content['title']['rendered'],
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 20),
                     Text(content['content']['rendered']),

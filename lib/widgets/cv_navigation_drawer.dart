@@ -1,5 +1,3 @@
-// lib/widgets/navigation_drawer.dart
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,7 +5,7 @@ import '../screens/submit_article.dart';
 import '../screens/articles_screen.dart';
 import '../providers/article_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../models/category.dart'; // Adjust the path as necessary
+import '../models/category.dart';
 import 'social_media_icon.dart';
 
 class CVNavigationDrawer extends StatelessWidget {
@@ -68,15 +66,25 @@ class CVNavigationDrawer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SocialMediaIcon(icon: FontAwesomeIcons.facebook, url: 'https://facebook.com/thecollegeview'),
+              SocialMediaIcon(
+                  icon: FontAwesomeIcons.facebook,
+                  url: 'https://facebook.com/thecollegeview'),
               const SizedBox(width: 10),
-              SocialMediaIcon(icon: FontAwesomeIcons.xTwitter, url: 'https://twitter.com/thecollegeview'),
+              SocialMediaIcon(
+                  icon: FontAwesomeIcons.xTwitter,
+                  url: 'https://twitter.com/thecollegeview'),
               const SizedBox(width: 10),
-              SocialMediaIcon(icon: FontAwesomeIcons.instagram, url: 'https://instagram.com/thecollegeview'),
+              SocialMediaIcon(
+                  icon: FontAwesomeIcons.instagram,
+                  url: 'https://instagram.com/thecollegeview'),
               const SizedBox(width: 10),
-              SocialMediaIcon(icon: FontAwesomeIcons.youtube, url: 'https://youtube.com/thecollegeview'),
+              SocialMediaIcon(
+                  icon: FontAwesomeIcons.youtube,
+                  url: 'https://youtube.com/thecollegeview'),
               const SizedBox(width: 10),
-              SocialMediaIcon(icon: FontAwesomeIcons.globe, url: 'https://thecollegeview.ie'),
+              SocialMediaIcon(
+                  icon: FontAwesomeIcons.globe,
+                  url: 'https://thecollegeview.ie'),
             ],
           ),
           const SizedBox(height: 20),
@@ -86,7 +94,8 @@ class CVNavigationDrawer extends StatelessWidget {
   }
 
   Widget _buildCategoryTile(BuildContext context, Category category) {
-    final articleProvider = Provider.of<ArticleProvider>(context, listen: false);
+    final articleProvider =
+        Provider.of<ArticleProvider>(context, listen: false);
 
     if (category.subcategories.isEmpty) {
       return ListTile(
@@ -96,7 +105,9 @@ class CVNavigationDrawer extends StatelessWidget {
           Navigator.pop(context);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ArticlesScreen(categoryName: category.name)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    ArticlesScreen(categoryName: category.name)),
           );
         },
       );

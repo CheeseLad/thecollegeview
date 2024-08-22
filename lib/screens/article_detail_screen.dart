@@ -21,7 +21,7 @@ class ArticleDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = '⏰${DateFormat('MMMM d, y').format(DateTime.parse(article.date))}';
+    String formattedDate = '⏰ ${DateFormat('MMMM d, y').format(DateTime.parse(article.date))}';
 
     return Scaffold(
       appBar: AppBar(

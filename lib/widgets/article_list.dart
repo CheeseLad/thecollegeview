@@ -20,6 +20,8 @@ class ArticleList extends StatelessWidget {
   Widget build(BuildContext context) {
     final articleProvider = Provider.of<ArticleProvider>(context);
 
+    //print('Debug: Category Name - $categoryName');
+
     return Column(
       children: [
         Expanded(
@@ -28,7 +30,7 @@ class ArticleList extends StatelessWidget {
             itemBuilder: (context, index) {
               Article article = articleProvider.articles[index];
               String previewText = '${_extractTextFromHtml(article.content).split(' ').take(35).join(' ')}...';
-              String formattedDate = '⏰${DateFormat('MMMM d, y').format(DateTime.parse(article.date))}';
+              String formattedDate = '⏰ ${DateFormat('MMMM d, y').format(DateTime.parse(article.date))}';
 
               return GestureDetector(
                 onTap: () => Navigator.push(
@@ -88,7 +90,7 @@ class ArticleList extends StatelessWidget {
           return const Text('Error');
         } else {
           return Text(
-            '👤${snapshot.data}');
+            '👤 ${snapshot.data}');
         }
       },
     ),
@@ -112,7 +114,7 @@ class ArticleList extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       IconButton(
-        icon: const Icon(Icons.arrow_back_ios, size: 24), // Larger left arrow icon
+        icon: const Icon(Icons.arrow_back_ios, size: 32), // Larger left arrow icon
         onPressed: articleProvider.currentPage > 1
             ? () => articleProvider.previousPage()
             : null,
@@ -122,7 +124,7 @@ class ArticleList extends StatelessWidget {
         style: const TextStyle(fontSize: 16), // Bigger page number text
       ),
       IconButton(
-        icon: const Icon(Icons.arrow_forward_ios, size: 24), // Larger right arrow icon
+        icon: const Icon(Icons.arrow_forward_ios, size: 32), // Larger right arrow icon
         onPressed: articleProvider.currentPage < articleProvider.totalPages
             ? () => articleProvider.nextPage()
             : null,
@@ -160,7 +162,7 @@ class ArticleList extends StatelessWidget {
       final data = json.decode(response.body);
       return data['source_url'];
     } else {
-      return 'assets/article_placeholder.png';
+      return 'assets/assets/article_placeholder.png';
     }
   }
 }

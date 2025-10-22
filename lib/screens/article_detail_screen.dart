@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/article.dart';
+import '../providers/saved_articles_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:share_plus/share_plus.dart';
@@ -20,10 +22,26 @@ class ArticleDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     String formattedDate =
         '⏰ ${DateFormat('MMMM d, y').format(DateTime.parse(article.date))}';
+    final savedArticlesProvider = Provider.of<SavedArticlesProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(article.title),
+        actions: [
+          IconButton(
+            icon: Icon(
+              savedArticlesProvider.isArticleSaved(article.id)
+                  ? Icons.bookmark
+                  : Icons.bookmark_border,
+              color: savedArticlesProvider.isArticleSaved(article.id)
+                  ? Colors.blue
+                  : Colors.white,
+            ),
+            onPressed: () {
+              savedArticlesProvider.toggleSaveArticle(article, categoryName);
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),

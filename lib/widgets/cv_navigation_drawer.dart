@@ -3,21 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../screens/submit_article.dart';
 import '../screens/articles_screen.dart';
+import '../screens/saved_articles_screen.dart';
 import '../providers/article_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../models/category.dart';
 import 'social_media_icon.dart';
 
 class CVNavigationDrawer extends StatelessWidget {
   const CVNavigationDrawer({super.key});
 
-  void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +39,19 @@ class CVNavigationDrawer extends StatelessWidget {
             onTap: () {
               articleProvider.selectCategory(null);
               Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: const Text('Saved Articles'),
+            leading: const Icon(Icons.bookmark),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SavedArticlesScreen(),
+                ),
+              );
             },
           ),
           ...articleProvider.categories.map((category) {

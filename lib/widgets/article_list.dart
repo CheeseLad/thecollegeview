@@ -7,6 +7,7 @@ import '../providers/article_provider.dart';
 import '../models/article.dart';
 import '../screens/article_detail_screen.dart';
 import '../utils/html_utils.dart';
+import 'network_image_with_fallback.dart';
 
 class ArticleList extends StatelessWidget {
   final String categoryName;
@@ -48,19 +49,24 @@ class ArticleList extends StatelessWidget {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
-                            } else {
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: SizedBox.fromSize(
-                                  size: const Size.fromRadius(56),
-                                  child: Image.network(
-                                    '${snapshot.data}',
-                                    width: 125,
-                                    height: 125,
-                                    fit: BoxFit.cover,
-                                  ),
+                              return Container(
+                                width: 125,
+                                height: 125,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            } else {
+                              return NetworkImageWithFallback(
+                                imageUrl: snapshot.data ?? '',
+                                fallbackAssetPath: 'assets/article_placeholder.png',
+                                width: 125,
+                                height: 125,
+                                borderRadius: BorderRadius.circular(8),
                               );
                             }
                           },
@@ -149,14 +155,18 @@ class ArticleList extends StatelessWidget {
   }
 
   Future<String> fetchFeaturedMedia(int mediaId) async {
-    final response = await http.get(
-        Uri.parse('https://thecollegeview.ie/wp-json/wp/v2/media/$mediaId'));
+    try {
+      final response = await http.get(
+          Uri.parse('https://thecollegeview.ie/wp-json/wp/v2/media/$mediaId'));
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      return data['source_url'];
-    } else {
-      return 'assets/assets/article_placeholder.png';
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['source_url'] ?? '';
+      } else {
+        return '';
+      }
+    } catch (e) {
+      return '';
     }
   }
 }

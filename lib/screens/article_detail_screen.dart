@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/html_utils.dart';
+import '../widgets/network_image_with_fallback.dart';
 
 class ArticleDetailScreen extends StatelessWidget {
   final Article article;
@@ -66,6 +67,19 @@ class ArticleDetailScreen extends StatelessWidget {
                     return {
                       'border-radius': '10px',
                     };
+                  }
+                  return null;
+                },
+                customWidgetBuilder: (element) {
+                  if (element.localName == 'img') {
+                    final src = element.attributes['src'];
+                    if (src != null && src.isNotEmpty) {
+                      return NetworkImageWithFallback(
+                        imageUrl: src,
+                        fallbackAssetPath: 'assets/article_placeholder.png',
+                        borderRadius: BorderRadius.circular(10),
+                      );
+                    }
                   }
                   return null;
                 },

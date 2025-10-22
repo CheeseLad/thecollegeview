@@ -12,7 +12,7 @@ class ArticlesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('The College View: $categoryName'),
+        title: Text(categoryName),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

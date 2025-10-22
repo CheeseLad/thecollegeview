@@ -1,3 +1,5 @@
+import '../utils/html_utils.dart';
+
 class Article {
   final int id;
   final String date;
@@ -20,8 +22,8 @@ class Article {
     return Article(
       id: json['id'],
       date: json['date'],
-      title: json['title']['rendered'],
-      content: json['content']['rendered'],
+      title: HtmlUtils.decodeHtmlEntities(json['title']['rendered']),
+      content: HtmlUtils.decodeHtmlEntitiesPreserveTags(json['content']['rendered']),
       link: json['link'],
       author: json['author'],
       featured_media: json['featured_media'],

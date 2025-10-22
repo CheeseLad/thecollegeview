@@ -6,8 +6,7 @@ import 'dart:convert';
 import '../providers/article_provider.dart';
 import '../models/article.dart';
 import '../screens/article_detail_screen.dart';
-import 'package:html/parser.dart' as html_parser;
-import 'package:html/dom.dart' as dom;
+import '../utils/html_utils.dart';
 
 class ArticleList extends StatelessWidget {
   final String categoryName;
@@ -26,8 +25,6 @@ class ArticleList extends StatelessWidget {
             itemCount: articleProvider.articles.length,
             itemBuilder: (context, index) {
               Article article = articleProvider.articles[index];
-              String previewText =
-                  '${_extractTextFromHtml(article.content).split(' ').take(35).join(' ')}...';
               String formattedDate =
                   '⏰ ${DateFormat('MMMM d, y').format(DateTime.parse(article.date))}';
 
@@ -138,12 +135,6 @@ class ArticleList extends StatelessWidget {
     );
   }
 
-  String _extractTextFromHtml(String htmlContent) {
-    RegExp regex = RegExp(r'<p>(.*?)</p>');
-    Iterable<Match> matches = regex.allMatches(htmlContent);
-    List<String> texts = matches.map((match) => match.group(1) ?? '').toList();
-    return texts.join(' ');
-  }
 
   Future<String> fetchAuthorName(int authorId) async {
     final response = await http.get(
@@ -151,7 +142,7 @@ class ArticleList extends StatelessWidget {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      return data['name'];
+      return HtmlUtils.decodeHtmlEntities(data['name']);
     } else {
       throw Exception('Failed to load author');
     }

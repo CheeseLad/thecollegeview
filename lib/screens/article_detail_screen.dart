@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../models/article.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../utils/html_utils.dart';
 
 class ArticleDetailScreen extends StatelessWidget {
   final Article article;
@@ -107,17 +107,10 @@ class ArticleDetailScreen extends StatelessWidget {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      return data['name'];
+      return HtmlUtils.decodeHtmlEntities(data['name']);
     } else {
       throw Exception('Failed to load author');
     }
   }
 
-  void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 }

@@ -21,10 +21,17 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ArticleProvider()),
         ChangeNotifierProvider(create: (context) => SavedArticlesProvider()),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'The College View',
-        home: ArticlesScreen(categoryName: "All Articles"),
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.grey[400],
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.blue,
+            background: Colors.grey[400]!,
+          ),
+        ),
+        home: const ArticlesScreen(categoryName: "All Articles"),
       ),
     );
   }

@@ -132,4 +132,9 @@ class ArticleProvider with ChangeNotifier {
     _currentPage = 1;
     fetchArticles();
   }
+
+  Future<void> refreshArticles() async {
+    _currentPage = 1;
+    await fetchArticles();
+  }
 }

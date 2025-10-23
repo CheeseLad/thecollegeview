@@ -55,6 +55,10 @@ class SavedArticlesProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> refreshSavedArticles() async {
+    _loadSavedArticles();
+  }
+
   void dispose() {
     _box.close();
     super.dispose();

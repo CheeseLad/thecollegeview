@@ -28,27 +28,32 @@ class ArticleDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(article.title),
         actions: [
-          IconButton(
-            icon: Icon(
-              savedArticlesProvider.isArticleSaved(article.id)
-                  ? Icons.bookmark
-                  : Icons.bookmark_border,
-              color: savedArticlesProvider.isArticleSaved(article.id)
-                  ? Colors.blue
-                  : Colors.white,
+          Padding(
+            padding: const EdgeInsets.only(right: 4.0),
+            child: IconButton(
+              icon: Icon(
+                savedArticlesProvider.isArticleSaved(article.id)
+                    ? Icons.bookmark
+                    : Icons.bookmark_border,
+                color: savedArticlesProvider.isArticleSaved(article.id)
+                    ? Colors.blue
+                    : Colors.black87,
+              ),
+              onPressed: () {
+                savedArticlesProvider.toggleSaveArticle(article, categoryName);
+              },
             ),
-            onPressed: () {
-              savedArticlesProvider.toggleSaveArticle(article, categoryName);
-            },
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      body: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               Text(
                 article.title,
                 style:
@@ -130,6 +135,7 @@ class ArticleDetailScreen extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

@@ -20,36 +20,40 @@ class SavedArticlesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Saved Articles'),
       ),
-      body: savedArticlesProvider.savedArticles.isEmpty
-          ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.bookmark_border,
-                    size: 64,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'No saved articles yet',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await savedArticlesProvider.refreshSavedArticles();
+        },
+        child: savedArticlesProvider.savedArticles.isEmpty
+            ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.bookmark_border,
+                      size: 64,
+                      color: Colors.black87,
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Tap the bookmark icon to save articles',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
+                    SizedBox(height: 16),
+                    Text(
+                      'No saved articles yet',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black87,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            )
-          : ListView.builder(
+                    SizedBox(height: 8),
+                    Text(
+                      'Tap the bookmark icon to save articles',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : ListView.builder(
               itemCount: savedArticlesProvider.savedArticles.length,
               itemBuilder: (context, index) {
                 SavedArticle savedArticle = savedArticlesProvider.savedArticles[index];
@@ -168,6 +172,7 @@ class SavedArticlesScreen extends StatelessWidget {
                 );
               },
             ),
+      ),
     );
   }
 

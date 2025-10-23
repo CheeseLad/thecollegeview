@@ -33,20 +33,20 @@ class ArticleList extends StatelessWidget {
 
               return Card(
                 margin: const EdgeInsets.all(10),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ArticleDetailScreen(
-                                article: article, categoryName: categoryName),
-                          ),
-                        ),
-                        child: FutureBuilder<String>(
+                child: InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ArticleDetailScreen(
+                          article: article, categoryName: categoryName),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FutureBuilder<String>(
                           future: fetchFeaturedMedia(article.featured_media),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
@@ -73,17 +73,8 @@ class ArticleList extends StatelessWidget {
                             }
                           },
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ArticleDetailScreen(
-                                  article: article, categoryName: categoryName),
-                            ),
-                          ),
+                        const SizedBox(width: 10),
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -116,21 +107,8 @@ class ArticleList extends StatelessWidget {
                             ],
                           ),
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          savedArticlesProvider.isArticleSaved(article.id)
-                              ? Icons.bookmark
-                              : Icons.bookmark_border,
-                          color: savedArticlesProvider.isArticleSaved(article.id)
-                              ? Colors.blue
-                              : Colors.grey,
-                        ),
-                        onPressed: () {
-                          savedArticlesProvider.toggleSaveArticle(article, categoryName);
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );

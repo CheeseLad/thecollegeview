@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../screens/submit_article.dart';
 import '../screens/articles_screen.dart';
 import '../screens/saved_articles_screen.dart';
+import '../screens/about_screen.dart';
+import '../screens/contact_screen.dart';
 import '../providers/article_provider.dart';
 import '../models/category.dart';
 import 'social_media_icon.dart';
@@ -39,6 +41,12 @@ class CVNavigationDrawer extends StatelessWidget {
             onTap: () {
               articleProvider.selectCategory(null);
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ArticlesScreen(categoryName: "All Articles"),
+                ),
+              );
             },
           ),
           ListTile(
@@ -57,13 +65,39 @@ class CVNavigationDrawer extends StatelessWidget {
           ...articleProvider.categories.map((category) {
             return _buildCategoryTile(context, category);
           }),
-          ListTile(
+          /*ListTile(
             title: const Text('Submit Article'),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ArticleSubmissionPage(),
+                ),
+              );
+            },
+          ),*/
+          ListTile(
+            title: const Text('About'),
+            leading: const Icon(Icons.info),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AboutScreen(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('Contact'),
+            leading: const Icon(Icons.contact_mail),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ContactScreen(),
                 ),
               );
             },

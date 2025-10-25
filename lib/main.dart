@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'providers/article_provider.dart';
 import 'providers/saved_articles_provider.dart';
+import 'providers/page_content_provider.dart';
 import 'screens/articles_screen.dart';
 
 void main() async {
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ArticleProvider()),
         ChangeNotifierProvider(create: (context) => SavedArticlesProvider()),
+        ChangeNotifierProvider(create: (context) => PageContentProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

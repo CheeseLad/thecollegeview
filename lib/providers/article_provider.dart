@@ -34,7 +34,7 @@ class ArticleProvider with ChangeNotifier {
 
   Future<void> fetchCategories() async {
     const url =
-        'https://thecollegeview.ie/wp-json/wp/v2/categories?include=4,7,5,687,6,220,68,9890,90,6880';
+        'https://thecollegeview.ie/wp-json/wp/v2/categories?include=4,7,5,687,6,220,68,9890,6880';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/image_proxy.dart';
 
 class NetworkImageWithFallback extends StatelessWidget {
   final String imageUrl;
@@ -20,8 +21,11 @@ class NetworkImageWithFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Use the image proxy to handle CORS issues
+    final proxiedImageUrl = ImageProxy.getProxiedImageUrl(imageUrl);
+    
     Widget imageWidget = Image.network(
-      imageUrl,
+      proxiedImageUrl,
       width: width,
       height: height,
       fit: fit,
@@ -40,6 +44,9 @@ class NetworkImageWithFallback extends StatelessWidget {
         );
       },
       errorBuilder: (context, error, stackTrace) {
+        // Log the error for debugging (CORS issues, network problems, etc.)
+        print('Image load error: $error');
+        
         return Container(
           width: width,
           height: height,

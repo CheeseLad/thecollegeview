@@ -81,6 +81,40 @@ class ArticleDetailScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
+              // Display featured media if available
+              if (article.featured_media > 0)
+                FutureBuilder<String>(
+                  future: fetchFeaturedMedia(article.featured_media),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        width: double.infinity,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 20),
+                        child: NetworkImageWithFallback(
+                          imageUrl: snapshot.data!,
+                          fallbackAssetPath: 'assets/article_placeholder.png',
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
               HtmlWidget(
                 article.content,
                 renderMode: RenderMode.column,
@@ -108,6 +142,68 @@ class ArticleDetailScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 10),
+              // Display tags if available
+              if (article.tags.isNotEmpty) ...[
+                // Text('Debug: Article has ${article.tags.length} tags: ${article.tags}'), // Debug
+                FutureBuilder<List<String>>(
+                  future: fetchTags(article.tags),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox.shrink();
+                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //const Text(
+                            //  'Tags:',
+                            //  style: TextStyle(
+                            //    fontSize: 16,
+                            //    fontWeight: FontWeight.bold,
+                            //    color: Colors.grey,
+                            //  ),
+                            //),
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 8.0,
+                              runSpacing: 4.0,
+                              children: snapshot.data!.map((tag) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.shade100,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: Colors.blue.shade300,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    tag,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.blue.shade800,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+              ] else ...[
+                Text('Debug: Article has no tags'), // Debug
+              ],
               GestureDetector(
                 onTap: () {
                   Share.share(article.link);
@@ -148,6 +244,44 @@ class ArticleDetailScreen extends StatelessWidget {
       return HtmlUtils.decodeHtmlEntities(data['name']);
     } else {
       throw Exception('Failed to load author');
+    }
+  }
+
+  Future<String> fetchFeaturedMedia(int mediaId) async {
+    try {
+      final response = await http.get(
+          Uri.parse('https://thecollegeview.ie/wp-json/wp/v2/media/$mediaId'));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['source_url'] ?? '';
+      } else {
+        return '';
+      }
+    } catch (e) {
+      return '';
+    }
+  }
+
+  Future<List<String>> fetchTags(List<int> tagIds) async {
+    if (tagIds.isEmpty) return [];
+    
+    try {
+      final List<String> tagNames = [];
+      
+      for (int tagId in tagIds) {
+        final response = await http.get(
+            Uri.parse('https://thecollegeview.ie/wp-json/wp/v2/tags/$tagId'));
+        
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          tagNames.add(HtmlUtils.decodeHtmlEntities(data['name']));
+        }
+      }
+      
+      return tagNames;
+    } catch (e) {
+      return [];
     }
   }
 

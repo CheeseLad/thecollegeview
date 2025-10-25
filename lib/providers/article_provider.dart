@@ -49,7 +49,7 @@ class ArticleProvider with ChangeNotifier {
 
   Future<void> fetchStickyArticles() async {
     const url =
-        'https://thecollegeview.ie/wp-json/wp/v2/posts?sticky=true&_fields=id,date,title,content,link,author,featured_media';
+        'https://thecollegeview.ie/wp-json/wp/v2/posts?sticky=true&_fields=id,date,title,content,link,author,featured_media,tags';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -75,7 +75,7 @@ class ArticleProvider with ChangeNotifier {
     final categoryFilter =
         _selectedCategory != null ? '&categories=$_selectedCategory' : '';
     final url =
-        'https://thecollegeview.ie/wp-json/wp/v2/posts/?page=$_currentPage&per_page=10$categoryFilter&_fields=id,date,title,content,link,author,featured_media';
+        'https://thecollegeview.ie/wp-json/wp/v2/posts/?page=$_currentPage&per_page=10$categoryFilter&_fields=id,date,title,content,link,author,featured_media,tags';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

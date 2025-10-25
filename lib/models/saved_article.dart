@@ -13,6 +13,7 @@ class SavedArticle extends HiveObject {
   final int featured_media;
   final String categoryName;
   final DateTime savedAt;
+  final List<int> tags;
 
   SavedArticle({
     required this.id,
@@ -24,6 +25,7 @@ class SavedArticle extends HiveObject {
     required this.featured_media,
     required this.categoryName,
     required this.savedAt,
+    required this.tags,
   });
 
   factory SavedArticle.fromArticle(Article article, String categoryName) {
@@ -37,6 +39,7 @@ class SavedArticle extends HiveObject {
       featured_media: article.featured_media,
       categoryName: categoryName,
       savedAt: DateTime.now(),
+      tags: article.tags,
     );
   }
 
@@ -49,6 +52,7 @@ class SavedArticle extends HiveObject {
       link: link,
       author: author,
       featured_media: featured_media,
+      tags: tags,
     );
   }
 
@@ -63,6 +67,7 @@ class SavedArticle extends HiveObject {
       'featured_media': featured_media,
       'categoryName': categoryName,
       'savedAt': savedAt.toIso8601String(),
+      'tags': tags,
     };
   }
 
@@ -77,6 +82,7 @@ class SavedArticle extends HiveObject {
       featured_media: map['featured_media'],
       categoryName: map['categoryName'],
       savedAt: DateTime.parse(map['savedAt']),
+      tags: List<int>.from(map['tags'] ?? []),
     );
   }
 }

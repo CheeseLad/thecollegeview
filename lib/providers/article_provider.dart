@@ -3,26 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/article.dart';
 import '../models/category.dart';
+import '../models/tag.dart';
 
 class ArticleProvider with ChangeNotifier {
   List<Article> _articles = [];
   List<Category> _categories = [];
+  List<Tag> _tags = [];
   bool _loading = false;
   String? _error;
   int _currentPage = 1;
   int _totalPages = 1;
   int? _selectedCategory;
+  int? _selectedTag;
 
   List<Article> get articles => _articles;
   List<Category> get categories => _categories;
+  List<Tag> get tags => _tags;
   bool get loading => _loading;
   String? get error => _error;
   int get currentPage => _currentPage;
   int get totalPages => _totalPages;
   int? get selectedCategory => _selectedCategory;
+  int? get selectedTag => _selectedTag;
 
   ArticleProvider() {
     fetchCategories();
+    fetchTags();
     fetchArticles();
   }
 
@@ -74,8 +80,9 @@ class ArticleProvider with ChangeNotifier {
 
     final categoryFilter =
         _selectedCategory != null ? '&categories=$_selectedCategory' : '';
+    final tagFilter = _selectedTag != null ? '&tags=$_selectedTag' : '';
     final url =
-        'https://thecollegeview.ie/wp-json/wp/v2/posts/?page=$_currentPage&per_page=10$categoryFilter&_fields=id,date,title,content,link,author,featured_media,tags';
+        'https://thecollegeview.ie/wp-json/wp/v2/posts/?page=$_currentPage&per_page=10$categoryFilter$tagFilter&_fields=id,date,title,content,link,author,featured_media,tags';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -136,5 +143,46 @@ class ArticleProvider with ChangeNotifier {
   Future<void> refreshArticles() async {
     _currentPage = 1;
     await fetchArticles();
+  }
+
+  Future<void> fetchTags() async {
+    const url = 'https://thecollegeview.ie/wp-json/wp/v2/tags?per_page=100';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        List<Tag> loadedTags = (json.decode(response.body) as List)
+            .map((data) => Tag.fromJson(data))
+            .toList();
+        _tags = loadedTags;
+        notifyListeners();
+      } else {
+        _error = 'Failed to load tags';
+        notifyListeners();
+      }
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchArticlesByTag(int tagId) async {
+    _selectedTag = tagId;
+    _selectedCategory = null;
+    _currentPage = 1;
+    await fetchArticles();
+  }
+
+  void selectTag(int? tagId) {
+    _selectedTag = tagId;
+    _selectedCategory = null;
+    _currentPage = 1;
+    fetchArticles();
+  }
+
+  void clearFilters() {
+    _selectedCategory = null;
+    _selectedTag = null;
+    _currentPage = 1;
+    fetchArticles();
   }
 }

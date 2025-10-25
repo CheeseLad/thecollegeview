@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/article.dart';
+import '../models/tag.dart';
 import '../providers/saved_articles_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -9,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/html_utils.dart';
 import '../widgets/network_image_with_fallback.dart';
+import 'tag_articles_screen.dart';
 
 class ArticleDetailScreen extends StatelessWidget {
   final Article article;
@@ -168,26 +170,60 @@ class ArticleDetailScreen extends StatelessWidget {
                             Wrap(
                               spacing: 8.0,
                               runSpacing: 4.0,
-                              children: snapshot.data!.map((tag) {
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade100,
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: Colors.blue.shade300,
-                                      width: 1,
+                              children: snapshot.data!.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final tagName = entry.value;
+                                final tagId = article.tags[index];
+                                
+                                return GestureDetector(
+                                  onTap: () async {
+                                    // Create a Tag object for navigation
+                                    final tag = Tag(
+                                      id: tagId,
+                                      name: tagName,
+                                      slug: tagName.toLowerCase().replaceAll(' ', '-'),
+                                      description: '',
+                                      count: 0,
+                                    );
+                                    
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TagArticlesScreen(tag: tag),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 6,
                                     ),
-                                  ),
-                                  child: Text(
-                                    tag,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.blue.shade800,
-                                      fontWeight: FontWeight.w500,
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade100,
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: Colors.blue.shade300,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          tagName,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.blue.shade800,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 12,
+                                          color: Colors.blue.shade800,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );

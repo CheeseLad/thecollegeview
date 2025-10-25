@@ -105,7 +105,7 @@ class ArticleDetailScreen extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 20),
                         child: NetworkImageWithFallback(
                           imageUrl: snapshot.data!,
-                          fallbackAssetPath: 'assets/article_placeholder.png',
+                          fallbackAssetPath: 'assets/logo.png',
                           width: double.infinity,
                           height: 200,
                           fit: BoxFit.cover,
@@ -135,7 +135,7 @@ class ArticleDetailScreen extends StatelessWidget {
                     if (src != null && src.isNotEmpty) {
                       return NetworkImageWithFallback(
                         imageUrl: src,
-                        fallbackAssetPath: 'assets/article_placeholder.png',
+                        fallbackAssetPath: 'assets/logo.png',
                         borderRadius: BorderRadius.circular(10),
                       );
                     }

@@ -158,50 +158,7 @@ class _ContactScreenState extends State<ContactScreen> {
                   contactInfo.webmasterEmail,
                 ),
                 const SizedBox(height: 30),
-                const Text(
-                  'CONNECT WITH US',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildSocialButton(
-                      context,
-                      'Facebook',
-                      Icons.facebook,
-                      'https://facebook.com/thecollegeview',
-                    ),
-                    _buildSocialButton(
-                      context,
-                      'Twitter',
-                      Icons.alternate_email,
-                      'https://twitter.com/thecollegeview',
-                    ),
-                    _buildSocialButton(
-                      context,
-                      'Instagram',
-                      Icons.camera_alt,
-                      'https://instagram.com/thecollegeview',
-                    ),
-                    _buildSocialButton(
-                      context,
-                      'YouTube',
-                      Icons.play_circle,
-                      'https://youtube.com/thecollegeview',
-                    ),
-                    _buildSocialButton(
-                      context,
-                      'Website',
-                      Icons.language,
-                      'https://thecollegeview.ie',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
+                
                 const Text(
                   '© The College View 1999-2025 - Maintained by Jake Farrell',
                   style: TextStyle(
@@ -210,13 +167,7 @@ class _ContactScreenState extends State<ContactScreen> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  'Powered with ❤️ by Redbrick',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
+                
               ],
             ),
           );

@@ -102,32 +102,20 @@ class CVNavigationDrawer extends StatelessWidget {
               );
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SocialMediaIcon(
-                  icon: FontAwesomeIcons.facebook,
-                  url: 'https://facebook.com/thecollegeview'),
-              const SizedBox(width: 10),
-              SocialMediaIcon(
-                  icon: FontAwesomeIcons.xTwitter,
-                  url: 'https://twitter.com/thecollegeview'),
-              const SizedBox(width: 10),
               SocialMediaIcon(
                   icon: FontAwesomeIcons.instagram,
                   url: 'https://instagram.com/thecollegeview'),
               const SizedBox(width: 10),
               SocialMediaIcon(
-                  icon: FontAwesomeIcons.youtube,
-                  url: 'https://youtube.com/thecollegeview'),
-              const SizedBox(width: 10),
-              SocialMediaIcon(
-                  icon: FontAwesomeIcons.globe,
+                  icon: FontAwesomeIcons.link,
                   url: 'https://thecollegeview.ie'),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
         ],
       ),
     );

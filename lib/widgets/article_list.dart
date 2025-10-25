@@ -65,7 +65,7 @@ class ArticleList extends StatelessWidget {
                             } else {
                               return NetworkImageWithFallback(
                                 imageUrl: snapshot.data ?? '',
-                                fallbackAssetPath: 'assets/article_placeholder.png',
+                                fallbackAssetPath: 'assets/logo.png',
                                 width: 125,
                                 height: 125,
                                 borderRadius: BorderRadius.circular(8),

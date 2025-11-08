@@ -39,7 +39,7 @@ class CVNavigationDrawer extends StatelessWidget {
           ListTile(
             title: const Text('All Articles'),
             onTap: () {
-              articleProvider.selectCategory(null);
+              articleProvider.clearFilters();
               Navigator.pop(context);
               Navigator.push(
                 context,

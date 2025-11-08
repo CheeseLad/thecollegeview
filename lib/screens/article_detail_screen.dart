@@ -74,7 +74,12 @@ class ArticleDetailScreen extends StatelessWidget {
                       } else if (snapshot.hasError) {
                         return const Text('Error');
                       } else {
-                        return Text('by ${snapshot.data} in $categoryName',
+                        // Check if categoryName is a tag (starts with "Tag: ")
+                        final isTag = categoryName.startsWith('Tag: ');
+                        final authorText = isTag 
+                            ? 'by ${snapshot.data}'
+                            : 'by ${snapshot.data} in $categoryName';
+                        return Text(authorText,
                             style: TextStyle(
                                 fontSize: 16, color: Colors.grey[600]));
                       }
@@ -82,6 +87,23 @@ class ArticleDetailScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              // Show tag on a new line if viewing tagged articles
+              if (categoryName.startsWith('Tag: ')) ...[
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    const Text('🏷️ '),
+                    Text(
+                      () {
+                        final tagName = categoryName.substring(5);
+                        return tagName.isEmpty
+                            ? tagName
+                            : tagName[0].toUpperCase() + tagName.substring(1);
+                      }(),
+                    ),
+                  ],
+                ),
+              ],
               const SizedBox(height: 10),
               // Display featured media if available
               if (article.featured_media > 0)

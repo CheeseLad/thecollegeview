@@ -83,11 +83,10 @@ class ArticleList extends StatelessWidget {
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold)),
                               const SizedBox(height: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
                                 children: [
                                   Text(formattedDate),
-                                  const SizedBox(height: 5),
+                                  const SizedBox(width: 10),
                                   FutureBuilder<String>(
                                     future: fetchAuthorName(article.author),
                                     builder: (context, snapshot) {
@@ -116,27 +115,30 @@ class ArticleList extends StatelessWidget {
           ),
         ),
         SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: articleProvider.currentPage > 1
-                    ? () => articleProvider.previousPage()
-                    : null,
-              ),
-              Text(
-                'Page ${articleProvider.currentPage} of ${articleProvider.totalPages}',
-                style: const TextStyle(fontSize: 16),
-              ),
-              IconButton(
-                icon: const Icon(Icons.arrow_forward_ios, size: 32),
-                onPressed:
-                    articleProvider.currentPage < articleProvider.totalPages
-                        ? () => articleProvider.nextPage()
-                        : null,
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_ios, size: 32),
+                  onPressed: articleProvider.currentPage > 1
+                      ? () => articleProvider.previousPage()
+                      : null,
+                ),
+                Text(
+                  'Page ${articleProvider.currentPage} of ${articleProvider.totalPages}',
+                  style: const TextStyle(fontSize: 16),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.arrow_forward_ios, size: 32),
+                  onPressed:
+                      articleProvider.currentPage < articleProvider.totalPages
+                          ? () => articleProvider.nextPage()
+                          : null,
+                ),
+              ],
+            ),
           ),
         ),
       ],

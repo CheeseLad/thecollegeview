@@ -185,4 +185,21 @@ class ArticleProvider with ChangeNotifier {
     _currentPage = 1;
     fetchArticles();
   }
+
+  Future<Article?> fetchArticleById(int articleId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://thecollegeview.ie/wp-json/wp/v2/posts/$articleId?_fields=id,date,title,content,link,author,featured_media,tags'),
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return Article.fromJson(data);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching article by ID: $e');
+      return null;
+    }
+  }
 }

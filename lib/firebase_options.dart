@@ -16,6 +16,19 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 /// );
 /// ```
 class DefaultFirebaseOptions {
+  /// Helper to get required environment variable or throw error
+  static String _getEnv(String key) {
+    final value = dotenv.env[key];
+    if (value == null || value.isEmpty) {
+      throw Exception(
+        'Missing required environment variable: $key\n'
+        'Please create a .env file with all required Firebase configuration values.\n'
+        'See .env.example for reference.',
+      );
+    }
+    return value;
+  }
+
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       return web;
@@ -42,46 +55,46 @@ class DefaultFirebaseOptions {
   }
 
   static FirebaseOptions get web => FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_WEB_API_KEY'] ?? 'AIzaSyBh63qxkCEA_tK0GN1l2MURUTJBEXMkCv0',
-    appId: dotenv.env['FIREBASE_WEB_APP_ID'] ?? '1:104881708497:web:e9325b530468b0293f14f0',
-    messagingSenderId: dotenv.env['FIREBASE_WEB_MESSAGING_SENDER_ID'] ?? '104881708497',
-    projectId: dotenv.env['FIREBASE_WEB_PROJECT_ID'] ?? 'thecollegeview-app',
-    authDomain: dotenv.env['FIREBASE_WEB_AUTH_DOMAIN'] ?? 'thecollegeview-app.firebaseapp.com',
-    storageBucket: dotenv.env['FIREBASE_WEB_STORAGE_BUCKET'] ?? 'thecollegeview-app.firebasestorage.app',
+    apiKey: _getEnv('FIREBASE_WEB_API_KEY'),
+    appId: _getEnv('FIREBASE_WEB_APP_ID'),
+    messagingSenderId: _getEnv('FIREBASE_WEB_MESSAGING_SENDER_ID'),
+    projectId: _getEnv('FIREBASE_WEB_PROJECT_ID'),
+    authDomain: _getEnv('FIREBASE_WEB_AUTH_DOMAIN'),
+    storageBucket: _getEnv('FIREBASE_WEB_STORAGE_BUCKET'),
   );
 
   static FirebaseOptions get android => FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_ANDROID_API_KEY'] ?? 'AIzaSyAiw3A3lPsoMZSu28Vtc-PWa3jaTtSydR4',
-    appId: dotenv.env['FIREBASE_ANDROID_APP_ID'] ?? '1:104881708497:android:b113421ed96068923f14f0',
-    messagingSenderId: dotenv.env['FIREBASE_ANDROID_MESSAGING_SENDER_ID'] ?? '104881708497',
-    projectId: dotenv.env['FIREBASE_ANDROID_PROJECT_ID'] ?? 'thecollegeview-app',
-    storageBucket: dotenv.env['FIREBASE_ANDROID_STORAGE_BUCKET'] ?? 'thecollegeview-app.firebasestorage.app',
+    apiKey: _getEnv('FIREBASE_ANDROID_API_KEY'),
+    appId: _getEnv('FIREBASE_ANDROID_APP_ID'),
+    messagingSenderId: _getEnv('FIREBASE_ANDROID_MESSAGING_SENDER_ID'),
+    projectId: _getEnv('FIREBASE_ANDROID_PROJECT_ID'),
+    storageBucket: _getEnv('FIREBASE_ANDROID_STORAGE_BUCKET'),
   );
 
   static FirebaseOptions get ios => FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_IOS_API_KEY'] ?? 'AIzaSyBHltBvEdch1jOX9mVm62EJbI2PhEP_q0w',
-    appId: dotenv.env['FIREBASE_IOS_APP_ID'] ?? '1:104881708497:ios:3aa6745639088df03f14f0',
-    messagingSenderId: dotenv.env['FIREBASE_IOS_MESSAGING_SENDER_ID'] ?? '104881708497',
-    projectId: dotenv.env['FIREBASE_IOS_PROJECT_ID'] ?? 'thecollegeview-app',
-    storageBucket: dotenv.env['FIREBASE_IOS_STORAGE_BUCKET'] ?? 'thecollegeview-app.firebasestorage.app',
-    iosBundleId: dotenv.env['FIREBASE_IOS_BUNDLE_ID'] ?? 'com.example.thecollegeview',
+    apiKey: _getEnv('FIREBASE_IOS_API_KEY'),
+    appId: _getEnv('FIREBASE_IOS_APP_ID'),
+    messagingSenderId: _getEnv('FIREBASE_IOS_MESSAGING_SENDER_ID'),
+    projectId: _getEnv('FIREBASE_IOS_PROJECT_ID'),
+    storageBucket: _getEnv('FIREBASE_IOS_STORAGE_BUCKET'),
+    iosBundleId: _getEnv('FIREBASE_IOS_BUNDLE_ID'),
   );
 
   static FirebaseOptions get macos => FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_MACOS_API_KEY'] ?? 'AIzaSyBHltBvEdch1jOX9mVm62EJbI2PhEP_q0w',
-    appId: dotenv.env['FIREBASE_MACOS_APP_ID'] ?? '1:104881708497:ios:3aa6745639088df03f14f0',
-    messagingSenderId: dotenv.env['FIREBASE_MACOS_MESSAGING_SENDER_ID'] ?? '104881708497',
-    projectId: dotenv.env['FIREBASE_MACOS_PROJECT_ID'] ?? 'thecollegeview-app',
-    storageBucket: dotenv.env['FIREBASE_MACOS_STORAGE_BUCKET'] ?? 'thecollegeview-app.firebasestorage.app',
-    iosBundleId: dotenv.env['FIREBASE_MACOS_BUNDLE_ID'] ?? 'com.example.thecollegeview',
+    apiKey: _getEnv('FIREBASE_MACOS_API_KEY'),
+    appId: _getEnv('FIREBASE_MACOS_APP_ID'),
+    messagingSenderId: _getEnv('FIREBASE_MACOS_MESSAGING_SENDER_ID'),
+    projectId: _getEnv('FIREBASE_MACOS_PROJECT_ID'),
+    storageBucket: _getEnv('FIREBASE_MACOS_STORAGE_BUCKET'),
+    iosBundleId: _getEnv('FIREBASE_MACOS_BUNDLE_ID'),
   );
 
   static FirebaseOptions get windows => FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_WINDOWS_API_KEY'] ?? 'AIzaSyBh63qxkCEA_tK0GN1l2MURUTJBEXMkCv0',
-    appId: dotenv.env['FIREBASE_WINDOWS_APP_ID'] ?? '1:104881708497:web:caa31baf3d35da413f14f0',
-    messagingSenderId: dotenv.env['FIREBASE_WINDOWS_MESSAGING_SENDER_ID'] ?? '104881708497',
-    projectId: dotenv.env['FIREBASE_WINDOWS_PROJECT_ID'] ?? 'thecollegeview-app',
-    authDomain: dotenv.env['FIREBASE_WINDOWS_AUTH_DOMAIN'] ?? 'thecollegeview-app.firebaseapp.com',
-    storageBucket: dotenv.env['FIREBASE_WINDOWS_STORAGE_BUCKET'] ?? 'thecollegeview-app.firebasestorage.app',
+    apiKey: _getEnv('FIREBASE_WINDOWS_API_KEY'),
+    appId: _getEnv('FIREBASE_WINDOWS_APP_ID'),
+    messagingSenderId: _getEnv('FIREBASE_WINDOWS_MESSAGING_SENDER_ID'),
+    projectId: _getEnv('FIREBASE_WINDOWS_PROJECT_ID'),
+    authDomain: _getEnv('FIREBASE_WINDOWS_AUTH_DOMAIN'),
+    storageBucket: _getEnv('FIREBASE_WINDOWS_STORAGE_BUCKET'),
   );
 }

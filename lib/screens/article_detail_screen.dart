@@ -30,6 +30,8 @@ class ArticleDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(article.title),
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 4.0),
@@ -40,7 +42,7 @@ class ArticleDetailScreen extends StatelessWidget {
                     : Icons.bookmark_border,
                 color: savedArticlesProvider.isArticleSaved(article.id)
                     ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onSurface,
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               onPressed: () {
                 savedArticlesProvider.toggleSaveArticle(article, categoryName);

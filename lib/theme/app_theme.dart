@@ -61,8 +61,8 @@ class AppTheme {
         ),
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF1976D2),
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        foregroundColor: Color(0xFF1E1E1E),
       ),
     );
   }
@@ -85,7 +85,7 @@ class AppTheme {
         ),
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF1976D2),
+        backgroundColor: Color(0xFF1E1E1E),
         foregroundColor: Colors.white,
       ),
     );

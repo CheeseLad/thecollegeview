@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
 import '../providers/article_provider.dart';
 import '../models/article.dart';
 import '../screens/article_detail_screen.dart';
 import '../services/wp_api_service.dart';
-import '../utils/html_utils.dart';
-import '../config/app_urls.dart';
-import 'network_image_with_fallback.dart';
+import '../widgets/network_image_with_fallback.dart';
 
 class ArticleList extends StatefulWidget {
   final String categoryName;
@@ -98,8 +95,8 @@ class _ArticleCardState extends State<_ArticleCard> {
 
   Future<_CardDetails> _loadDetails() async {
     final results = await Future.wait([
-      _fetchFeaturedMedia(widget.article.featured_media),
-      _fetchAuthorName(widget.article.link, widget.article.author),
+      WpApiService.fetchFeaturedMediaUrl(widget.article.featured_media),
+      WpApiService.fetchAuthorName(widget.article.link, widget.article.author),
     ]);
     return _CardDetails(imageUrl: results[0], authorName: results[1]);
   }
@@ -182,25 +179,4 @@ class _CardDetails {
   final String authorName;
 
   _CardDetails({required this.imageUrl, required this.authorName});
-}
-
-Future<String> _fetchAuthorName(String articleUrl, int authorId) async {
-  final authorName = await WpApiService.fetchAuthorInfo(articleUrl, authorId);
-  return HtmlUtils.decodeHtmlEntities(authorName);
-}
-
-Future<String> _fetchFeaturedMedia(int mediaId) async {
-  try {
-    final response = await WpApiService.get(
-        Uri.parse('${AppUrls.apiBase}/wp-json/wp/v2/media/$mediaId'));
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      return data['source_url'] ?? '';
-    } else {
-      return '';
-    }
-  } catch (e) {
-    return '';
-  }
 }

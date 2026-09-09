@@ -15,39 +15,29 @@ Future<void> main() async {
   await Hive.initFlutter();
   await CacheService().init();
   
-  runApp(const MyApp());
+  final savedArticlesProvider = SavedArticlesProvider();
+  await savedArticlesProvider.init();
+  
+  runApp(MyApp(savedArticlesProvider: savedArticlesProvider));
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  final SavedArticlesProvider savedArticlesProvider;
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  late final ArticleProvider _articleProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    _articleProvider = ArticleProvider();
-  }
+  const MyApp({super.key, required this.savedArticlesProvider});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: _articleProvider),
-        ChangeNotifierProvider(create: (context) => SavedArticlesProvider()),
+        ChangeNotifierProvider(create: (context) => ArticleProvider()),
+        ChangeNotifierProvider.value(value: savedArticlesProvider),
         ChangeNotifierProvider(create: (context) => PageContentProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
-            navigatorKey: _navigatorKey,
             debugShowCheckedModeBanner: false,
             title: 'The College View',
             theme: AppTheme.lightTheme,
@@ -60,6 +50,9 @@ class _MyAppState extends State<MyApp> {
                 return ArticleDetailScreen(
                   article: args['article'],
                   categoryName: args['categoryName'] ?? 'All Articles',
+                  authorName: args['authorName'],
+                  featuredMediaUrl: args['featuredMediaUrl'],
+                  tagNames: args['tagNames'],
                 );
               },
             },

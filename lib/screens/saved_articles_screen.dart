@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
 import '../providers/saved_articles_provider.dart';
 import '../models/saved_article.dart';
 import '../screens/article_detail_screen.dart';
 import '../services/wp_api_service.dart';
-import '../utils/html_utils.dart';
 import '../widgets/network_image_with_fallback.dart';
-import '../config/app_urls.dart';
 
 class SavedArticlesScreen extends StatelessWidget {
   const SavedArticlesScreen({super.key});
@@ -105,13 +102,20 @@ class _SavedArticleCardState extends State<_SavedArticleCard> {
   }
 
   Future<_SavedCardDetails> _loadDetails() async {
-    final results = await Future.wait([
-      fetchFeaturedMedia(widget.savedArticle.featured_media),
-      fetchAuthorName(
-          widget.savedArticle.link, widget.savedArticle.author),
-    ]);
-    return _SavedCardDetails(
-        imageUrl: results[0], authorName: results[1]);
+    final savedArticle = widget.savedArticle;
+
+    String imageUrl = savedArticle.featuredMediaUrl;
+    if (imageUrl.isEmpty) {
+      imageUrl = await WpApiService.fetchFeaturedMediaUrl(savedArticle.featured_media);
+    }
+
+    String authorName = savedArticle.authorName;
+    if (authorName.isEmpty) {
+      authorName = await WpApiService.fetchAuthorName(
+          savedArticle.link, savedArticle.author);
+    }
+
+    return _SavedCardDetails(imageUrl: imageUrl, authorName: authorName);
   }
 
   @override
@@ -143,6 +147,9 @@ class _SavedArticleCardState extends State<_SavedArticleCard> {
                       builder: (context) => ArticleDetailScreen(
                         article: widget.savedArticle.toArticle(),
                         categoryName: widget.savedArticle.categoryName,
+                        featuredMediaUrl: widget.savedArticle.featuredMediaUrl,
+                        authorName: widget.savedArticle.authorName,
+                        tagNames: widget.savedArticle.tagNames,
                       ),
                     ),
                   ),
@@ -163,6 +170,9 @@ class _SavedArticleCardState extends State<_SavedArticleCard> {
                         builder: (context) => ArticleDetailScreen(
                           article: widget.savedArticle.toArticle(),
                           categoryName: widget.savedArticle.categoryName,
+                          featuredMediaUrl: widget.savedArticle.featuredMediaUrl,
+                          authorName: widget.savedArticle.authorName,
+                          tagNames: widget.savedArticle.tagNames,
                         ),
                       ),
                     ),
@@ -205,27 +215,6 @@ class _SavedArticleCardState extends State<_SavedArticleCard> {
         },
       ),
     );
-  }
-
-  Future<String> fetchAuthorName(String articleUrl, int authorId) async {
-    final authorName = await WpApiService.fetchAuthorInfo(articleUrl, authorId);
-    return HtmlUtils.decodeHtmlEntities(authorName);
-  }
-
-  Future<String> fetchFeaturedMedia(int mediaId) async {
-    try {
-      final response = await WpApiService.get(
-          Uri.parse('${AppUrls.apiBase}/wp-json/wp/v2/media/$mediaId'));
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return data['source_url'] ?? '';
-      } else {
-        return '';
-      }
-    } catch (e) {
-      return '';
-    }
   }
 }
 

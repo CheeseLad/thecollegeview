@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/saved_article.dart';
 import '../models/article.dart';
+import '../services/wp_api_service.dart';
 
 class SavedArticlesProvider extends ChangeNotifier {
   static const String _boxName = 'savedArticles';
@@ -11,7 +12,6 @@ class SavedArticlesProvider extends ChangeNotifier {
   List<SavedArticle> get savedArticles => _savedArticles;
 
   Future<void> init() async {
-    await Hive.initFlutter();
     _box = await Hive.openBox<Map>(_boxName);
     _loadSavedArticles();
   }
@@ -28,10 +28,20 @@ class SavedArticlesProvider extends ChangeNotifier {
 
   Future<void> saveArticle(Article article, String categoryName) async {
     if (isArticleSaved(article.id)) {
-      return; // Article already saved
+      return;
     }
 
-    final savedArticle = SavedArticle.fromArticle(article, categoryName);
+    final featuredMediaUrl = await WpApiService.fetchFeaturedMediaUrl(article.featured_media);
+    final authorName = await WpApiService.fetchAuthorName(article.link, article.author);
+    final tagNames = await WpApiService.fetchTagNames(article.tags);
+
+    final savedArticle = SavedArticle.fromArticle(
+      article,
+      categoryName,
+      featuredMediaUrl: featuredMediaUrl,
+      authorName: authorName,
+      tagNames: tagNames,
+    );
     await _box.add(savedArticle.toMap());
     _loadSavedArticles();
   }

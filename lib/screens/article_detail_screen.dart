@@ -6,20 +6,52 @@ import '../providers/saved_articles_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:share_plus/share_plus.dart';
-import 'dart:convert';
 import '../services/wp_api_service.dart';
-import '../utils/html_utils.dart';
 import '../widgets/network_image_with_fallback.dart';
-import '../config/app_urls.dart';
 import 'tag_articles_screen.dart';
 
 class ArticleDetailScreen extends StatelessWidget {
   final Article article;
-
   final String categoryName;
+  final String? featuredMediaUrl;
+  final String? authorName;
+  final List<String>? tagNames;
 
-  const ArticleDetailScreen(
-      {super.key, required this.article, required this.categoryName});
+  const ArticleDetailScreen({
+    super.key,
+    required this.article,
+    required this.categoryName,
+    this.featuredMediaUrl,
+    this.authorName,
+    this.tagNames,
+  });
+
+  Future<String> _resolveAuthorName(BuildContext context) async {
+    final cached = authorName;
+    if (cached != null && cached.isNotEmpty) {
+      return cached;
+    }
+    final fetched = await WpApiService.fetchAuthorName(article.link, article.author);
+    return fetched;
+  }
+
+  Future<String> _resolveFeaturedMediaUrl(BuildContext context) async {
+    final cached = featuredMediaUrl;
+    if (cached != null && cached.isNotEmpty) {
+      return cached;
+    }
+    final fetched = await WpApiService.fetchFeaturedMediaUrl(article.featured_media);
+    return fetched;
+  }
+
+  Future<List<String>> _resolveTagNames(BuildContext context) async {
+    final cached = tagNames;
+    if (cached != null && cached.isNotEmpty) {
+      return cached;
+    }
+    final fetched = await WpApiService.fetchTagNames(article.tags);
+    return fetched;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,12 +102,12 @@ class ArticleDetailScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                    Text(formattedDate,
-                       style: TextStyle(
-                         fontSize: 16,
-                         color: Theme.of(context).colorScheme.onSurfaceVariant,
-                       )),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      )),
                   FutureBuilder<String>(
-                    future: fetchAuthorName(article.link, article.author),
+                    future: _resolveAuthorName(context),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
@@ -93,11 +125,11 @@ class ArticleDetailScreen extends StatelessWidget {
                     },
                   ),
                    Text(
-                     '📂 $categoryName',
-                     style: TextStyle(
-                       fontSize: 16,
-                       color: Theme.of(context).colorScheme.onSurfaceVariant,
-                     ),
+                    '📂 $categoryName',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                    ),
                 ],
               ),
@@ -122,7 +154,7 @@ class ArticleDetailScreen extends StatelessWidget {
               // Display featured media if available
               if (article.featured_media > 0)
                 FutureBuilder<String>(
-                  future: fetchFeaturedMedia(article.featured_media),
+                  future: _resolveFeaturedMediaUrl(context),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
@@ -183,7 +215,7 @@ class ArticleDetailScreen extends StatelessWidget {
               // Display tags if available
               if (article.tags.isNotEmpty) ...[
                 FutureBuilder<List<String>>(
-                  future: fetchTags(article.tags),
+                  future: _resolveTagNames(context),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const SizedBox.shrink();
@@ -299,55 +331,11 @@ class ArticleDetailScreen extends StatelessWidget {
                 ),
               ),
             ],
+            ),
           ),
         ),
       ),
-    ),
-  ),
-);
+      ),
+    );
   }
-
-  Future<String> fetchAuthorName(String articleUrl, int authorId) async {
-    final authorName = await WpApiService.fetchAuthorInfo(articleUrl, authorId);
-    return HtmlUtils.decodeHtmlEntities(authorName);
-  }
-
-  Future<String> fetchFeaturedMedia(int mediaId) async {
-    try {
-      final response = await WpApiService.get(
-          Uri.parse('${AppUrls.apiBase}/wp-json/wp/v2/media/$mediaId'));
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return data['source_url'] ?? '';
-      } else {
-        return '';
-      }
-    } catch (e) {
-      return '';
-    }
-  }
-
-  Future<List<String>> fetchTags(List<int> tagIds) async {
-    if (tagIds.isEmpty) return [];
-    
-    try {
-      final List<String> tagNames = [];
-      
-      for (int tagId in tagIds) {
-        final response = await WpApiService.get(
-            Uri.parse('${AppUrls.apiBase}/wp-json/wp/v2/tags/$tagId'));
-        
-        if (response.statusCode == 200) {
-          final data = json.decode(response.body);
-          tagNames.add(HtmlUtils.decodeHtmlEntities(data['name']));
-        }
-      }
-      
-      return tagNames;
-    } catch (e) {
-      return [];
-    }
-  }
-
 }

@@ -1,8 +1,6 @@
 import 'package:hive/hive.dart';
 import 'article.dart';
 
-// part 'saved_article.g.dart'; // Uncomment after running build_runner
-
 class SavedArticle extends HiveObject {
   final int id;
   final String date;
@@ -14,6 +12,9 @@ class SavedArticle extends HiveObject {
   final String categoryName;
   final DateTime savedAt;
   final List<int> tags;
+  final String featuredMediaUrl;
+  final String authorName;
+  final List<String> tagNames;
 
   SavedArticle({
     required this.id,
@@ -26,9 +27,18 @@ class SavedArticle extends HiveObject {
     required this.categoryName,
     required this.savedAt,
     required this.tags,
+    this.featuredMediaUrl = '',
+    this.authorName = '',
+    this.tagNames = const [],
   });
 
-  factory SavedArticle.fromArticle(Article article, String categoryName) {
+  factory SavedArticle.fromArticle(
+    Article article,
+    String categoryName, {
+    String featuredMediaUrl = '',
+    String authorName = '',
+    List<String> tagNames = const [],
+  }) {
     return SavedArticle(
       id: article.id,
       date: article.date,
@@ -40,6 +50,9 @@ class SavedArticle extends HiveObject {
       categoryName: categoryName,
       savedAt: DateTime.now(),
       tags: article.tags,
+      featuredMediaUrl: featuredMediaUrl,
+      authorName: authorName,
+      tagNames: tagNames,
     );
   }
 
@@ -68,6 +81,9 @@ class SavedArticle extends HiveObject {
       'categoryName': categoryName,
       'savedAt': savedAt.toIso8601String(),
       'tags': tags,
+      'featuredMediaUrl': featuredMediaUrl,
+      'authorName': authorName,
+      'tagNames': tagNames,
     };
   }
 
@@ -83,6 +99,9 @@ class SavedArticle extends HiveObject {
       categoryName: map['categoryName'],
       savedAt: DateTime.parse(map['savedAt']),
       tags: List<int>.from(map['tags'] ?? []),
+      featuredMediaUrl: map['featuredMediaUrl'] ?? '',
+      authorName: map['authorName'] ?? '',
+      tagNames: List<String>.from(map['tagNames'] ?? []),
     );
   }
 }

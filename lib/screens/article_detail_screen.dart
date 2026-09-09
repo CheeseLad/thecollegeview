@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/article.dart';
 import '../models/tag.dart';
+import '../providers/article_provider.dart';
 import '../providers/saved_articles_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -330,6 +331,11 @@ class ArticleDetailScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
+              _RelatedArticlesSection(
+                article: article,
+                categoryName: categoryName,
+              ),
             ],
             ),
           ),
@@ -338,4 +344,161 @@ class ArticleDetailScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class _RelatedArticlesSection extends StatefulWidget {
+  final Article article;
+  final String categoryName;
+
+  const _RelatedArticlesSection({
+    required this.article,
+    required this.categoryName,
+  });
+
+  @override
+  State<_RelatedArticlesSection> createState() => _RelatedArticlesSectionState();
+}
+
+class _RelatedArticlesSectionState extends State<_RelatedArticlesSection> {
+  late final Future<List<Article>> _relatedFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _relatedFuture = Provider.of<ArticleProvider>(context, listen: false)
+        .getRelatedArticles(widget.article);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Article>>(
+      future: _relatedFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox(
+            height: 150,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        final related = snapshot.data!;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Related Articles',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 10),
+            ...related.map((relatedArticle) => _RelatedArticleCard(
+              article: relatedArticle,
+              categoryName: widget.categoryName,
+            )).toList(),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _RelatedArticleCard extends StatelessWidget {
+  final Article article;
+  final String categoryName;
+
+  const _RelatedArticleCard({
+    required this.article,
+    required this.categoryName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final String formattedDate =
+        '⏰ ${DateFormat('MMMM d, y').format(DateTime.parse(article.date))}';
+
+    return FutureBuilder<_CardDetails>(
+      future: _loadDetails(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox(
+            height: 125,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final details =
+            snapshot.data ?? _CardDetails(imageUrl: '', authorName: '');
+
+        return Card(
+          margin: const EdgeInsets.only(bottom: 10),
+          child: InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ArticleDetailScreen(
+                  article: article,
+                  categoryName: categoryName,
+                ),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  NetworkImageWithFallback(
+                    imageUrl: details.imageUrl,
+                    fallbackAssetPath: 'assets/logo.png',
+                    width: 125,
+                    height: 125,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SelectableText(article.title,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SelectableText(formattedDate),
+                            const SizedBox(height: 5),
+                            SelectableText('👤 ${details.authorName}'),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<_CardDetails> _loadDetails() async {
+    final results = await Future.wait([
+      WpApiService.fetchFeaturedMediaUrl(article.featured_media),
+      WpApiService.fetchAuthorName(article.link, article.author),
+    ]);
+    return _CardDetails(imageUrl: results[0], authorName: results[1]);
+  }
+}
+
+class _CardDetails {
+  final String imageUrl;
+  final String authorName;
+  const _CardDetails({required this.imageUrl, required this.authorName});
 }

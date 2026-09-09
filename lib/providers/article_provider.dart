@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../config/category_config.dart';
 import '../models/article.dart';
@@ -274,5 +275,26 @@ class ArticleProvider with ChangeNotifier {
       print('Error fetching article by ID: $e');
       return null;
     }
+  }
+
+  Future<List<Article>> getRelatedArticles(Article article) async {
+    if (article.tags.isEmpty) return [];
+
+    final tagIds = article.tags.take(5).join(',');
+    final url =
+        '${AppUrls.apiBase}/wp-json/wp/v2/posts?tags=$tagIds&per_page=10&exclude=${article.id}&_fields=id,date,title,content,link,author,featured_media,tags';
+    try {
+      final response = await WpApiService.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final results = (json.decode(response.body) as List)
+            .map((data) => Article.fromJson(data))
+            .toList();
+        results.shuffle(Random());
+        return results.take(3).toList();
+      }
+    } catch (e) {
+      // ignore
+    }
+    return [];
   }
 }

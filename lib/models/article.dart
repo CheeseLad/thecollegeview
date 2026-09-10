@@ -7,7 +7,7 @@ class Article {
   final String content;
   final String link;
   final int author;
-  final int featured_media;
+  final int featuredMedia;
   final List<int> tags;
 
   Article(
@@ -17,7 +17,7 @@ class Article {
       required this.content,
       required this.link,
       required this.author,
-      required this.featured_media,
+      required this.featuredMedia,
       required this.tags});
 
   factory Article.fromJson(Map<String, dynamic> json) {
@@ -34,7 +34,7 @@ class Article {
           HtmlUtils.decodeHtmlEntitiesPreserveTags(json['content']['rendered']),
       link: json['link'],
       author: json['author'],
-      featured_media: json['featured_media'],
+      featuredMedia: json['featured_media'],
       tags: tags,
     );
   }

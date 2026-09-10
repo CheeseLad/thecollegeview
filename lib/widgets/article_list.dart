@@ -97,7 +97,7 @@ class _ArticleCardState extends State<_ArticleCard> {
 
   Future<_CardDetails> _loadDetails() async {
     final results = await Future.wait([
-      WpApiService.fetchFeaturedMediaUrl(widget.article.featured_media),
+      WpApiService.fetchFeaturedMediaUrl(widget.article.featuredMedia),
       WpApiService.fetchAuthorName(widget.article.link, widget.article.author),
     ]);
     return _CardDetails(imageUrl: results[0], authorName: results[1]);

@@ -178,7 +178,7 @@ class ArticleProvider with ChangeNotifier {
         throw Exception('Failed to load articles');
       }
     } catch (error) {
-      print('Error searching articles: $error');
+      // print('Error searching articles: $error');
     }
   }
 
@@ -271,7 +271,7 @@ class ArticleProvider with ChangeNotifier {
         return null;
       }
     } catch (e) {
-      print('Error fetching article by ID: $e');
+      // print('Error fetching article by ID: $e');
       return null;
     }
   }

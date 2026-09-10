@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import '../providers/page_content_provider.dart';
 import '../widgets/cv_navigation_drawer.dart';
@@ -118,29 +117,5 @@ class _AboutScreenState extends State<AboutScreen> {
         },
       ),
     );
-  }
-
-  Widget _buildSocialButton(
-      BuildContext context, String label, IconData icon, String url) {
-    return Column(
-      children: [
-        IconButton(
-          icon: Icon(icon),
-          onPressed: () => _launchURL(url),
-          iconSize: 30,
-        ),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
   }
 }

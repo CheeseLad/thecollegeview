@@ -8,7 +8,7 @@ class SavedArticle extends HiveObject {
   final String content;
   final String link;
   final int author;
-  final int featured_media;
+  final int featuredMedia;
   final String categoryName;
   final DateTime savedAt;
   final List<int> tags;
@@ -23,7 +23,7 @@ class SavedArticle extends HiveObject {
     required this.content,
     required this.link,
     required this.author,
-    required this.featured_media,
+    required this.featuredMedia,
     required this.categoryName,
     required this.savedAt,
     required this.tags,
@@ -46,7 +46,7 @@ class SavedArticle extends HiveObject {
       content: article.content,
       link: article.link,
       author: article.author,
-      featured_media: article.featured_media,
+      featuredMedia: article.featuredMedia,
       categoryName: categoryName,
       savedAt: DateTime.now(),
       tags: article.tags,
@@ -64,7 +64,7 @@ class SavedArticle extends HiveObject {
       content: content,
       link: link,
       author: author,
-      featured_media: featured_media,
+      featuredMedia: featuredMedia,
       tags: tags,
     );
   }
@@ -77,7 +77,7 @@ class SavedArticle extends HiveObject {
       'content': content,
       'link': link,
       'author': author,
-      'featured_media': featured_media,
+      'featuredMedia': featuredMedia,
       'categoryName': categoryName,
       'savedAt': savedAt.toIso8601String(),
       'tags': tags,
@@ -95,7 +95,7 @@ class SavedArticle extends HiveObject {
       content: map['content'],
       link: map['link'],
       author: map['author'],
-      featured_media: map['featured_media'],
+      featuredMedia: map['featuredMedia'],
       categoryName: map['categoryName'],
       savedAt: DateTime.parse(map['savedAt']),
       tags: List<int>.from(map['tags'] ?? []),

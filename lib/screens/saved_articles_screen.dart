@@ -32,7 +32,7 @@ class SavedArticlesScreen extends StatelessWidget {
                       size: 64,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text(
                       'No saved articles yet',
                       style: TextStyle(
@@ -40,7 +40,7 @@ class SavedArticlesScreen extends StatelessWidget {
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       'Tap the bookmark icon to save articles',
                       style: TextStyle(
@@ -107,7 +107,7 @@ class _SavedArticleCardState extends State<_SavedArticleCard> {
     String imageUrl = savedArticle.featuredMediaUrl;
     if (imageUrl.isEmpty) {
       imageUrl =
-          await WpApiService.fetchFeaturedMediaUrl(savedArticle.featured_media);
+          await WpApiService.fetchFeaturedMediaUrl(savedArticle.featuredMedia);
     }
 
     String authorName = savedArticle.authorName;

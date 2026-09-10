@@ -45,7 +45,7 @@ class NetworkImageWithFallback extends StatelessWidget {
       },
       errorBuilder: (context, error, stackTrace) {
         // Log the error for debugging (CORS issues, network problems, etc.)
-        print('Image load error: $error');
+        // print('Image load error: $error');
 
         return Container(
           width: width,

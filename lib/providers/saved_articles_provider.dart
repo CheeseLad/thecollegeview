@@ -33,7 +33,7 @@ class SavedArticlesProvider extends ChangeNotifier {
     }
 
     final featuredMediaUrl =
-        await WpApiService.fetchFeaturedMediaUrl(article.featured_media);
+        await WpApiService.fetchFeaturedMediaUrl(article.featuredMedia);
     final authorName =
         await WpApiService.fetchAuthorName(article.link, article.author);
     final tagNames = await WpApiService.fetchTagNames(article.tags);

@@ -43,7 +43,7 @@ class ArticleDetailScreen extends StatelessWidget {
       return cached;
     }
     final fetched =
-        await WpApiService.fetchFeaturedMediaUrl(article.featured_media);
+        await WpApiService.fetchFeaturedMediaUrl(article.featuredMedia);
     return fetched;
   }
 
@@ -160,7 +160,7 @@ class ArticleDetailScreen extends StatelessWidget {
                   ],
                   const SizedBox(height: 10),
                   // Display featured media if available
-                  if (article.featured_media > 0)
+                  if (article.featuredMedia > 0)
                     FutureBuilder<String>(
                       future: _resolveFeaturedMediaUrl(context),
                       builder: (context, snapshot) {
@@ -427,12 +427,10 @@ class _RelatedArticlesSectionState extends State<_RelatedArticlesSection> {
               ),
             ),
             const SizedBox(height: 10),
-            ...related
-                .map((relatedArticle) => _RelatedArticleCard(
-                      article: relatedArticle,
-                      categoryName: widget.categoryName,
-                    ))
-                .toList(),
+            ...related.map((relatedArticle) => _RelatedArticleCard(
+                  article: relatedArticle,
+                  categoryName: widget.categoryName,
+                ))
           ],
         );
       },
@@ -465,7 +463,7 @@ class _RelatedArticleCard extends StatelessWidget {
         }
 
         final details =
-            snapshot.data ?? _CardDetails(imageUrl: '', authorName: '');
+            snapshot.data ?? const _CardDetails(imageUrl: '', authorName: '');
 
         return Card(
           margin: const EdgeInsets.only(bottom: 10),
@@ -523,7 +521,7 @@ class _RelatedArticleCard extends StatelessWidget {
 
   Future<_CardDetails> _loadDetails() async {
     final results = await Future.wait([
-      WpApiService.fetchFeaturedMediaUrl(article.featured_media),
+      WpApiService.fetchFeaturedMediaUrl(article.featuredMedia),
       WpApiService.fetchAuthorName(article.link, article.author),
     ]);
     return _CardDetails(imageUrl: results[0], authorName: results[1]);

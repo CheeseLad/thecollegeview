@@ -23,7 +23,7 @@ class NetworkImageWithFallback extends StatelessWidget {
   Widget build(BuildContext context) {
     // Use the image proxy to handle CORS issues
     final proxiedImageUrl = ImageProxy.getProxiedImageUrl(imageUrl);
-    
+
     Widget imageWidget = Image.network(
       proxiedImageUrl,
       width: width,
@@ -46,7 +46,7 @@ class NetworkImageWithFallback extends StatelessWidget {
       errorBuilder: (context, error, stackTrace) {
         // Log the error for debugging (CORS issues, network problems, etc.)
         print('Image load error: $error');
-        
+
         return Container(
           width: width,
           height: height,
@@ -61,13 +61,13 @@ class NetworkImageWithFallback extends StatelessWidget {
             fit: fit,
             errorBuilder: (context, error, stackTrace) {
               // If even the fallback asset fails, show a placeholder icon
-               return Container(
-                 width: width,
-                 height: height,
-                 decoration: BoxDecoration(
-                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                   borderRadius: borderRadius,
-                 ),
+              return Container(
+                width: width,
+                height: height,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius: borderRadius,
+                ),
                 child: Icon(
                   Icons.image_not_supported,
                   color: Theme.of(context).disabledColor,

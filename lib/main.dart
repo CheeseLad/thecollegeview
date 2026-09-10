@@ -11,13 +11,13 @@ import 'screens/article_detail_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Hive.initFlutter();
   await CacheService().init();
-  
+
   final savedArticlesProvider = SavedArticlesProvider();
   await savedArticlesProvider.init();
-  
+
   runApp(MyApp(savedArticlesProvider: savedArticlesProvider));
 }
 
@@ -46,7 +46,8 @@ class MyApp extends StatelessWidget {
             home: const ArticlesScreen(categoryName: "All Articles"),
             routes: {
               '/article': (context) {
-                final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+                final args = ModalRoute.of(context)!.settings.arguments
+                    as Map<String, dynamic>;
                 return ArticleDetailScreen(
                   article: args['article'],
                   categoryName: args['categoryName'] ?? 'All Articles',

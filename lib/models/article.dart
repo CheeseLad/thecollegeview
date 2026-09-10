@@ -30,7 +30,8 @@ class Article {
       id: json['id'],
       date: json['date'],
       title: HtmlUtils.decodeHtmlEntities(json['title']['rendered']),
-      content: HtmlUtils.decodeHtmlEntitiesPreserveTags(json['content']['rendered']),
+      content:
+          HtmlUtils.decodeHtmlEntitiesPreserveTags(json['content']['rendered']),
       link: json['link'],
       author: json['author'],
       featured_media: json['featured_media'],

@@ -106,7 +106,8 @@ class _SavedArticleCardState extends State<_SavedArticleCard> {
 
     String imageUrl = savedArticle.featuredMediaUrl;
     if (imageUrl.isEmpty) {
-      imageUrl = await WpApiService.fetchFeaturedMediaUrl(savedArticle.featured_media);
+      imageUrl =
+          await WpApiService.fetchFeaturedMediaUrl(savedArticle.featured_media);
     }
 
     String authorName = savedArticle.authorName;
@@ -132,8 +133,8 @@ class _SavedArticleCardState extends State<_SavedArticleCard> {
             );
           }
 
-          final details = snapshot.data ??
-              _SavedCardDetails(imageUrl: '', authorName: '');
+          final details =
+              snapshot.data ?? _SavedCardDetails(imageUrl: '', authorName: '');
 
           return Padding(
             padding: const EdgeInsets.all(15.0),
@@ -170,7 +171,8 @@ class _SavedArticleCardState extends State<_SavedArticleCard> {
                         builder: (context) => ArticleDetailScreen(
                           article: widget.savedArticle.toArticle(),
                           categoryName: widget.savedArticle.categoryName,
-                          featuredMediaUrl: widget.savedArticle.featuredMediaUrl,
+                          featuredMediaUrl:
+                              widget.savedArticle.featuredMediaUrl,
                           authorName: widget.savedArticle.authorName,
                           tagNames: widget.savedArticle.tagNames,
                         ),

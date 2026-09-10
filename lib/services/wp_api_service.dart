@@ -6,8 +6,7 @@ import '../utils/html_utils.dart';
 import 'cache_service.dart';
 
 class WpApiService {
-  static const String _authorInfoEndpoint =
-      '${AppUrls.apiBase}/get-subheading';
+  static const String _authorInfoEndpoint = '${AppUrls.apiBase}/get-subheading';
 
   static final CacheService _cache = CacheService();
 
@@ -48,8 +47,7 @@ class WpApiService {
             if (decoded is Map<String, dynamic>) {
               final subheading = decoded['subheading'];
 
-              if (subheading is String &&
-                  subheading.trim().isNotEmpty) {
+              if (subheading is String && subheading.trim().isNotEmpty) {
                 return subheading.trim();
               }
             }

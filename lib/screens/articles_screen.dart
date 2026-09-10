@@ -33,11 +33,12 @@ class ArticlesScreen extends StatelessWidget {
       drawer: const CVNavigationDrawer(),
       body: RefreshIndicator(
         onRefresh: () async {
-          await Provider.of<ArticleProvider>(context, listen: false).refreshArticles();
+          await Provider.of<ArticleProvider>(context, listen: false)
+              .refreshArticles();
         },
-          child: ArticleList(
-            categoryName: categoryName,
-          ),
+        child: ArticleList(
+          categoryName: categoryName,
+        ),
       ),
     );
   }

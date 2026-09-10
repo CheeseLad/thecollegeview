@@ -18,7 +18,8 @@ class _TagArticlesScreenState extends State<TagArticlesScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ArticleProvider>(context, listen: false).fetchArticlesByTag(widget.tag.id);
+      Provider.of<ArticleProvider>(context, listen: false)
+          .fetchArticlesByTag(widget.tag.id);
     });
   }
 
@@ -32,7 +33,8 @@ class _TagArticlesScreenState extends State<TagArticlesScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await Provider.of<ArticleProvider>(context, listen: false).refreshArticles();
+          await Provider.of<ArticleProvider>(context, listen: false)
+              .refreshArticles();
         },
         child: Consumer<ArticleProvider>(
           builder: (context, articleProvider, child) {
@@ -47,18 +49,18 @@ class _TagArticlesScreenState extends State<TagArticlesScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                     Icon(
-                       Icons.error_outline,
-                       size: 64,
-                       color: Theme.of(context).colorScheme.outline,
-                     ),
+                    Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
                     const SizedBox(height: 16),
-                     Text(
-                       'Error: ${articleProvider.error}',
-                       style: TextStyle(
-                         fontSize: 16,
-                         color: Theme.of(context).colorScheme.onSurfaceVariant,
-                       ),
+                    Text(
+                      'Error: ${articleProvider.error}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),

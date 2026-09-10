@@ -32,7 +32,8 @@ class ArticleDetailScreen extends StatelessWidget {
     if (cached != null && cached.isNotEmpty) {
       return cached;
     }
-    final fetched = await WpApiService.fetchAuthorName(article.link, article.author);
+    final fetched =
+        await WpApiService.fetchAuthorName(article.link, article.author);
     return fetched;
   }
 
@@ -41,7 +42,8 @@ class ArticleDetailScreen extends StatelessWidget {
     if (cached != null && cached.isNotEmpty) {
       return cached;
     }
-    final fetched = await WpApiService.fetchFeaturedMediaUrl(article.featured_media);
+    final fetched =
+        await WpApiService.fetchFeaturedMediaUrl(article.featured_media);
     return fetched;
   }
 
@@ -93,254 +95,282 @@ class ArticleDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-              Text(
-                article.title,
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                   Text(formattedDate,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      )),
-                  FutureBuilder<String>(
-                    future: _resolveAuthorName(context),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return const Text('Error');
-                      } else {
-                         return Text(
-                           '👤 ${snapshot.data}',
-                           style: TextStyle(
-                             fontSize: 16,
-                             color: Theme.of(context).colorScheme.onSurfaceVariant,
-                           ),
-                         );
-                      }
-                    },
+                  Text(
+                    article.title,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                   Text(
-                    '📂 $categoryName',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                   ),
-                ],
-              ),
-              // Show tag on a new line if viewing tagged articles
-              if (categoryName.startsWith('Tag: ')) ...[
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    const Text('🏷️ '),
-                    Text(
-                      () {
-                        final tagName = categoryName.substring(5);
-                        return tagName.isEmpty
-                            ? tagName
-                            : tagName[0].toUpperCase() + tagName.substring(1);
-                      }(),
-                    ),
-                  ],
-                ),
-              ],
-              const SizedBox(height: 10),
-              // Display featured media if available
-              if (article.featured_media > 0)
-                FutureBuilder<String>(
-                  future: _resolveFeaturedMediaUrl(context),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                        width: double.infinity,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        child: NetworkImageWithFallback(
-                          imageUrl: snapshot.data!,
-                          fallbackAssetPath: 'assets/logo.png',
-                          width: double.infinity,
-                          height: 200,
-                          fit: BoxFit.cover,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
-              HtmlWidget(
-                article.content,
-                renderMode: RenderMode.column,
-                textStyle: const TextStyle(fontSize: 16),
-                customStylesBuilder: (element) {
-                  if (element.localName == 'img') {
-                    return {
-                      'border-radius': '10px',
-                    };
-                  }
-                  return null;
-                },
-                customWidgetBuilder: (element) {
-                  if (element.localName == 'img') {
-                    final src = element.attributes['src'];
-                    if (src != null && src.isNotEmpty) {
-                      return NetworkImageWithFallback(
-                        imageUrl: src,
-                        fallbackAssetPath: 'assets/logo.png',
-                        borderRadius: BorderRadius.circular(10),
-                      );
-                    }
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              // Display tags if available
-              if (article.tags.isNotEmpty) ...[
-                FutureBuilder<List<String>>(
-                  future: _resolveTagNames(context),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const SizedBox.shrink();
-                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //const Text(
-                            //  'Tags:',
-                            //  style: TextStyle(
-                            //    fontSize: 16,
-                            //    fontWeight: FontWeight.bold,
-                            //    color: Colors.grey,
-                            //  ),
-                            //),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 8.0,
-                              runSpacing: 4.0,
-                              children: snapshot.data!.asMap().entries.map((entry) {
-                                final index = entry.key;
-                                final tagName = entry.value;
-                                final tagId = article.tags[index];
-                                
-                                return GestureDetector(
-                                  onTap: () async {
-                                    // Create a Tag object for navigation
-                                    final tag = Tag(
-                                      id: tagId,
-                                      name: tagName,
-                                      slug: tagName.toLowerCase().replaceAll(' ', '-'),
-                                      description: '',
-                                      count: 0,
-                                    );
-                                    
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => TagArticlesScreen(tag: tag),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.primaryContainer,
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                        color: Theme.of(context).colorScheme.primary,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          tagName,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Icon(
-                                          Icons.arrow_forward_ios,
-                                          size: 12,
-                                          color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
-              ] else ...[
-                const SizedBox.shrink(),
-              ],
-              GestureDetector(
-                onTap: () {
-                  Share.shareUri(Uri.parse(article.link));
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 1.0),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  const SizedBox(height: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.share),
-                      SizedBox(width: 8.0),
+                      Text(formattedDate,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          )),
+                      FutureBuilder<String>(
+                        future: _resolveAuthorName(context),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return const Text('Error');
+                          } else {
+                            return Text(
+                              '👤 ${snapshot.data}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                              ),
+                            );
+                          }
+                        },
+                      ),
                       Text(
-                        "Share",
-                        style: TextStyle(fontSize: 18.0),
+                        '📂 $categoryName',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  // Show tag on a new line if viewing tagged articles
+                  if (categoryName.startsWith('Tag: ')) ...[
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        const Text('🏷️ '),
+                        Text(
+                          () {
+                            final tagName = categoryName.substring(5);
+                            return tagName.isEmpty
+                                ? tagName
+                                : tagName[0].toUpperCase() +
+                                    tagName.substring(1);
+                          }(),
+                        ),
+                      ],
+                    ),
+                  ],
+                  const SizedBox(height: 10),
+                  // Display featured media if available
+                  if (article.featured_media > 0)
+                    FutureBuilder<String>(
+                      future: _resolveFeaturedMediaUrl(context),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container(
+                            width: double.infinity,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        } else if (snapshot.hasData &&
+                            snapshot.data!.isNotEmpty) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 20),
+                            child: NetworkImageWithFallback(
+                              imageUrl: snapshot.data!,
+                              fallbackAssetPath: 'assets/logo.png',
+                              width: double.infinity,
+                              height: 200,
+                              fit: BoxFit.cover,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          );
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    ),
+                  HtmlWidget(
+                    article.content,
+                    renderMode: RenderMode.column,
+                    textStyle: const TextStyle(fontSize: 16),
+                    customStylesBuilder: (element) {
+                      if (element.localName == 'img') {
+                        return {
+                          'border-radius': '10px',
+                        };
+                      }
+                      return null;
+                    },
+                    customWidgetBuilder: (element) {
+                      if (element.localName == 'img') {
+                        final src = element.attributes['src'];
+                        if (src != null && src.isNotEmpty) {
+                          return NetworkImageWithFallback(
+                            imageUrl: src,
+                            fallbackAssetPath: 'assets/logo.png',
+                            borderRadius: BorderRadius.circular(10),
+                          );
+                        }
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  // Display tags if available
+                  if (article.tags.isNotEmpty) ...[
+                    FutureBuilder<List<String>>(
+                      future: _resolveTagNames(context),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const SizedBox.shrink();
+                        } else if (snapshot.hasData &&
+                            snapshot.data!.isNotEmpty) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //const Text(
+                                //  'Tags:',
+                                //  style: TextStyle(
+                                //    fontSize: 16,
+                                //    fontWeight: FontWeight.bold,
+                                //    color: Colors.grey,
+                                //  ),
+                                //),
+                                const SizedBox(height: 8),
+                                Wrap(
+                                  spacing: 8.0,
+                                  runSpacing: 4.0,
+                                  children: snapshot.data!
+                                      .asMap()
+                                      .entries
+                                      .map((entry) {
+                                    final index = entry.key;
+                                    final tagName = entry.value;
+                                    final tagId = article.tags[index];
+
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        // Create a Tag object for navigation
+                                        final tag = Tag(
+                                          id: tagId,
+                                          name: tagName,
+                                          slug: tagName
+                                              .toLowerCase()
+                                              .replaceAll(' ', '-'),
+                                          description: '',
+                                          count: 0,
+                                        );
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TagArticlesScreen(tag: tag),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primaryContainer,
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          border: Border.all(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              tagName,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimaryContainer,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Icon(
+                                              Icons.arrow_forward_ios,
+                                              size: 12,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimaryContainer,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    ),
+                  ] else ...[
+                    const SizedBox.shrink(),
+                  ],
+                  GestureDetector(
+                    onTap: () {
+                      Share.shareUri(Uri.parse(article.link));
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            width: 1.0),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.share),
+                          SizedBox(width: 8.0),
+                          Text(
+                            "Share",
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _RelatedArticlesSection(
+                    article: article,
+                    categoryName: categoryName,
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              _RelatedArticlesSection(
-                article: article,
-                categoryName: categoryName,
-              ),
-            ],
             ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -356,7 +386,8 @@ class _RelatedArticlesSection extends StatefulWidget {
   });
 
   @override
-  State<_RelatedArticlesSection> createState() => _RelatedArticlesSectionState();
+  State<_RelatedArticlesSection> createState() =>
+      _RelatedArticlesSectionState();
 }
 
 class _RelatedArticlesSectionState extends State<_RelatedArticlesSection> {
@@ -396,10 +427,12 @@ class _RelatedArticlesSectionState extends State<_RelatedArticlesSection> {
               ),
             ),
             const SizedBox(height: 10),
-            ...related.map((relatedArticle) => _RelatedArticleCard(
-              article: relatedArticle,
-              categoryName: widget.categoryName,
-            )).toList(),
+            ...related
+                .map((relatedArticle) => _RelatedArticleCard(
+                      article: relatedArticle,
+                      categoryName: widget.categoryName,
+                    ))
+                .toList(),
           ],
         );
       },

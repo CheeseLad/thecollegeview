@@ -17,7 +17,8 @@ class SavedArticlesProvider extends ChangeNotifier {
   }
 
   void _loadSavedArticles() {
-    _savedArticles = _box.values.map((map) => SavedArticle.fromMap(map)).toList();
+    _savedArticles =
+        _box.values.map((map) => SavedArticle.fromMap(map)).toList();
     _savedArticles.sort((a, b) => b.savedAt.compareTo(a.savedAt));
     notifyListeners();
   }
@@ -31,8 +32,10 @@ class SavedArticlesProvider extends ChangeNotifier {
       return;
     }
 
-    final featuredMediaUrl = await WpApiService.fetchFeaturedMediaUrl(article.featured_media);
-    final authorName = await WpApiService.fetchAuthorName(article.link, article.author);
+    final featuredMediaUrl =
+        await WpApiService.fetchFeaturedMediaUrl(article.featured_media);
+    final authorName =
+        await WpApiService.fetchAuthorName(article.link, article.author);
     final tagNames = await WpApiService.fetchTagNames(article.tags);
 
     final savedArticle = SavedArticle.fromArticle(

@@ -23,7 +23,7 @@ class PageContentProvider with ChangeNotifier {
     try {
       // Try to fetch from WordPress pages endpoint first
       final response = await WpApiService.get(
-         Uri.parse('${AppUrls.apiBase}/wp-json/wp/v2/pages?slug=about'),
+        Uri.parse('${AppUrls.apiBase}/wp-json/wp/v2/pages?slug=about'),
       );
 
       if (response.statusCode == 200) {
@@ -56,7 +56,7 @@ class PageContentProvider with ChangeNotifier {
     try {
       // Try to fetch from WordPress pages endpoint first
       final response = await WpApiService.get(
-         Uri.parse('${AppUrls.apiBase}/wp-json/wp/v2/pages?slug=contact'),
+        Uri.parse('${AppUrls.apiBase}/wp-json/wp/v2/pages?slug=contact'),
       );
 
       if (response.statusCode == 200) {

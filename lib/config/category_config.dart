@@ -18,7 +18,8 @@ class CategoryConfig {
         .toList();
 
     final dropdowns = (json['dropdowns'] as List? ?? const [])
-        .map((entry) => CategoryDropdown.fromJson(entry as Map<String, dynamic>))
+        .map(
+            (entry) => CategoryDropdown.fromJson(entry as Map<String, dynamic>))
         .toList();
 
     return CategoryConfig(
@@ -28,7 +29,8 @@ class CategoryConfig {
   }
 
   static Future<CategoryConfig> load() async {
-    final raw = await rootBundle.loadString('assets/config/category_config.json');
+    final raw =
+        await rootBundle.loadString('assets/config/category_config.json');
     final decoded = jsonDecode(raw);
     return CategoryConfig.fromJson(decoded as Map<String, dynamic>);
   }

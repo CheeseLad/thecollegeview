@@ -40,8 +40,7 @@ class ArticleProvider with ChangeNotifier {
     try {
       final config = await CategoryConfig.load();
 
-      const url =
-          '${AppUrls.apiBase}/wp-json/wp/v2/categories'
+      const url = '${AppUrls.apiBase}/wp-json/wp/v2/categories'
           '?per_page=100'
           '&_fields=id,name,slug,parent,count';
 
@@ -58,8 +57,7 @@ class ArticleProvider with ChangeNotifier {
           .toList();
 
       final categoriesById = {
-        for (final category in allCategories)
-          category.id: category,
+        for (final category in allCategories) category.id: category,
       };
 
       final rootCategories = <Category>[];
@@ -143,8 +141,8 @@ class ArticleProvider with ChangeNotifier {
           _pageSizes.add(loadedArticles.length);
         }
 
-        final totalPagesHeader = response.headers['x-wp-totalpages']
-            ?? response.headers['X-WP-TotalPages'];
+        final totalPagesHeader = response.headers['x-wp-totalpages'] ??
+            response.headers['X-WP-TotalPages'];
         if (totalPagesHeader != null) {
           _totalPages = int.parse(totalPagesHeader);
         } else if (loadedArticles.length == 10) {
@@ -169,8 +167,7 @@ class ArticleProvider with ChangeNotifier {
   Future<void> searchArticles(String searchQuery) async {
     _currentPage = 1;
     _totalPages = 1;
-    final url =
-        '${AppUrls.apiBase}/wp-json/wp/v2/posts?search=$searchQuery';
+    final url = '${AppUrls.apiBase}/wp-json/wp/v2/posts?search=$searchQuery';
     try {
       final response = await WpApiService.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -197,7 +194,8 @@ class ArticleProvider with ChangeNotifier {
     if (_loading) return;
     if (_currentPage > 1 && _pageSizes.length >= _currentPage) {
       _currentPage--;
-      _articles = _articles.sublist(0, _articles.length - _pageSizes[_currentPage]);
+      _articles =
+          _articles.sublist(0, _articles.length - _pageSizes[_currentPage]);
       _pageSizes = _pageSizes.sublist(0, _currentPage);
       notifyListeners();
     }
@@ -263,7 +261,8 @@ class ArticleProvider with ChangeNotifier {
   Future<Article?> fetchArticleById(int articleId) async {
     try {
       final response = await WpApiService.get(
-        Uri.parse('${AppUrls.apiBase}/wp-json/wp/v2/posts/$articleId?_fields=id,date,title,content,link,author,featured_media,tags'),
+        Uri.parse(
+            '${AppUrls.apiBase}/wp-json/wp/v2/posts/$articleId?_fields=id,date,title,content,link,author,featured_media,tags'),
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

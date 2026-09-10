@@ -17,7 +17,8 @@ class _AboutScreenState extends State<AboutScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<PageContentProvider>(context, listen: false).fetchAboutContent();
+      Provider.of<PageContentProvider>(context, listen: false)
+          .fetchAboutContent();
     });
   }
 
@@ -41,7 +42,8 @@ class _AboutScreenState extends State<AboutScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error, size: 64, color: Theme.of(context).colorScheme.error),
+                  Icon(Icons.error,
+                      size: 64, color: Theme.of(context).colorScheme.error),
                   const SizedBox(height: 16),
                   Text(
                     'Error loading content: ${pageContentProvider.error}',
@@ -83,33 +85,34 @@ class _AboutScreenState extends State<AboutScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                        Text(
-                          aboutContent.title,
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            aboutContent.title,
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        HtmlWidget(
-                          aboutContent.content,
-                          textStyle: const TextStyle(fontSize: 16, height: 1.5),
-                        ),
-                        const SizedBox(height: 30),
-                        const Text(
-                          '© The College View 1999-2026 - Maintained by Jake Farrell',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontStyle: FontStyle.italic,
+                          const SizedBox(height: 20),
+                          HtmlWidget(
+                            aboutContent.content,
+                            textStyle:
+                                const TextStyle(fontSize: 16, height: 1.5),
                           ),
-                        ),
-                        const SizedBox(height: 5),
-                      ],
+                          const SizedBox(height: 30),
+                          const Text(
+                            '© The College View 1999-2026 - Maintained by Jake Farrell',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
             ),
           );
         },
@@ -117,7 +120,8 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
-  Widget _buildSocialButton(BuildContext context, String label, IconData icon, String url) {
+  Widget _buildSocialButton(
+      BuildContext context, String label, IconData icon, String url) {
     return Column(
       children: [
         IconButton(

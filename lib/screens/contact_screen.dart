@@ -16,7 +16,8 @@ class _ContactScreenState extends State<ContactScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<PageContentProvider>(context, listen: false).fetchContactInfo();
+      Provider.of<PageContentProvider>(context, listen: false)
+          .fetchContactInfo();
     });
   }
 
@@ -40,7 +41,8 @@ class _ContactScreenState extends State<ContactScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error, size: 64, color: Theme.of(context).colorScheme.error),
+                  Icon(Icons.error,
+                      size: 64, color: Theme.of(context).colorScheme.error),
                   const SizedBox(height: 16),
                   Text(
                     'Error loading content: ${pageContentProvider.error}',
@@ -69,69 +71,69 @@ class _ContactScreenState extends State<ContactScreen> {
           return Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 900),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: SelectionArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Contact',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: SelectionArea(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Contact',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Please email press releases to the appropriate section only.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        height: 1.5,
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Please email press releases to the appropriate section only.',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          height: 1.5,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 30),
-                    _buildContactSection(
-                      'Editor-in-Chief: ${contactInfo.editorInChief}',
-                      contactInfo.editorInChiefEmail,
-                    ),
-                    _buildContactSection(
-                      'Deputy Chief Editor: ${contactInfo.deputyEditor}',
-                      contactInfo.deputyEditorEmail,
-                    ),
-                    _buildContactSection(
-                      'News: ${contactInfo.newsEditors}',
-                      contactInfo.newsEmail,
-                    ),
-                    _buildContactSection(
-                      'Opinions & Features: ${contactInfo.opinionFeaturesEditors}',
-                      '${contactInfo.opinionEmail}\n${contactInfo.featuresEmail}',
-                    ),
-                    _buildContactSection(
-                      'Sports: ${contactInfo.sportsEditors}',
-                      contactInfo.sportsEmail,
-                    ),
-                    _buildContactSection(
-                      'Lifestyle: ${contactInfo.lifestyleEditors}',
-                      contactInfo.lifestyleEmail,
-                    ),
-                    _buildContactSection(
-                      'The Hype: ${contactInfo.hypeEditors}',
-                      contactInfo.hypeEmail,
-                    ),
-                    _buildContactSection(
-                      'Satire & Cartoons: ${contactInfo.satireEditors}',
-                      contactInfo.satireEmail,
-                    ),
-                    _buildContactSection(
-                      'Irish & Lang: ${contactInfo.irishEditors}',
-                      contactInfo.irishEmail,
-                    ),
-                    _buildContactSection(
-                      'E-paper Layout Editors and Sub-editors', contactInfo.productionEmail
-                    ),
-                    /*const SizedBox(height: 20),
+                      const SizedBox(height: 30),
+                      _buildContactSection(
+                        'Editor-in-Chief: ${contactInfo.editorInChief}',
+                        contactInfo.editorInChiefEmail,
+                      ),
+                      _buildContactSection(
+                        'Deputy Chief Editor: ${contactInfo.deputyEditor}',
+                        contactInfo.deputyEditorEmail,
+                      ),
+                      _buildContactSection(
+                        'News: ${contactInfo.newsEditors}',
+                        contactInfo.newsEmail,
+                      ),
+                      _buildContactSection(
+                        'Opinions & Features: ${contactInfo.opinionFeaturesEditors}',
+                        '${contactInfo.opinionEmail}\n${contactInfo.featuresEmail}',
+                      ),
+                      _buildContactSection(
+                        'Sports: ${contactInfo.sportsEditors}',
+                        contactInfo.sportsEmail,
+                      ),
+                      _buildContactSection(
+                        'Lifestyle: ${contactInfo.lifestyleEditors}',
+                        contactInfo.lifestyleEmail,
+                      ),
+                      _buildContactSection(
+                        'The Hype: ${contactInfo.hypeEditors}',
+                        contactInfo.hypeEmail,
+                      ),
+                      _buildContactSection(
+                        'Satire & Cartoons: ${contactInfo.satireEditors}',
+                        contactInfo.satireEmail,
+                      ),
+                      _buildContactSection(
+                        'Irish & Lang: ${contactInfo.irishEditors}',
+                        contactInfo.irishEmail,
+                      ),
+                      _buildContactSection(
+                          'E-paper Layout Editors and Sub-editors',
+                          contactInfo.productionEmail),
+                      /*const SizedBox(height: 20),
                     Card(
                       elevation: 2,
                       shape: RoundedRectangleBorder(
@@ -163,11 +165,11 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),*/
-                    _buildContactSection(
-                      'Webmaster: ${contactInfo.webmaster}',
-                      contactInfo.webmasterEmail,
-                    ),
-                    /*const SizedBox(height: 30),
+                      _buildContactSection(
+                        'Webmaster: ${contactInfo.webmaster}',
+                        contactInfo.webmasterEmail,
+                      ),
+                      /*const SizedBox(height: 30),
                     const Text(
                       '© The College View 1999-2026 - Maintained by Jake Farrell',
                       style: TextStyle(
@@ -175,11 +177,11 @@ class _ContactScreenState extends State<ContactScreen> {
                         fontStyle: FontStyle.italic,
                       ),
                     ),*/
-                    const SizedBox(height: 5),
-                  ],
+                      const SizedBox(height: 5),
+                    ],
+                  ),
                 ),
               ),
-            ),
             ),
           );
         },
@@ -225,7 +227,8 @@ class _ContactScreenState extends State<ContactScreen> {
     );
   }
 
-  Widget _buildSocialButton(BuildContext context, String label, IconData icon, String url) {
+  Widget _buildSocialButton(
+      BuildContext context, String label, IconData icon, String url) {
     return Column(
       children: [
         IconButton(

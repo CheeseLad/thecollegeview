@@ -33,7 +33,8 @@ class _ArticleListState extends State<ArticleList> {
   }
 
   void _onScroll() {
-    final articleProvider = Provider.of<ArticleProvider>(context, listen: false);
+    final articleProvider =
+        Provider.of<ArticleProvider>(context, listen: false);
     if (articleProvider.loading) return;
 
     if (_scrollController.position.pixels >=
@@ -51,7 +52,8 @@ class _ArticleListState extends State<ArticleList> {
     return ListView.builder(
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      itemCount: articleProvider.articles.length + (articleProvider.loading ? 1 : 0),
+      itemCount:
+          articleProvider.articles.length + (articleProvider.loading ? 1 : 0),
       itemBuilder: (context, index) {
         if (index >= articleProvider.articles.length) {
           return const Padding(

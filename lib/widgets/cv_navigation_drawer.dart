@@ -14,7 +14,6 @@ import 'social_media_icon.dart';
 class CVNavigationDrawer extends StatelessWidget {
   const CVNavigationDrawer({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     final articleProvider = Provider.of<ArticleProvider>(context);
@@ -40,7 +39,6 @@ class CVNavigationDrawer extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 ListTile(
                   title: const Text('All Articles'),
                   onTap: () {
@@ -55,7 +53,6 @@ class CVNavigationDrawer extends StatelessWidget {
                     );
                   },
                 ),
-
                 ListTile(
                   title: const Text('Saved Articles'),
                   leading: const Icon(Icons.bookmark),
@@ -69,11 +66,9 @@ class CVNavigationDrawer extends StatelessWidget {
                     );
                   },
                 ),
-
                 ...articleProvider.categories.map((category) {
                   return _buildCategoryTile(context, category);
                 }),
-
                 ListTile(
                   title: const Text('About'),
                   leading: const Icon(Icons.info),
@@ -87,7 +82,6 @@ class CVNavigationDrawer extends StatelessWidget {
                     );
                   },
                 ),
-
                 ListTile(
                   title: const Text('Contact'),
                   leading: const Icon(Icons.contact_mail),
@@ -101,17 +95,19 @@ class CVNavigationDrawer extends StatelessWidget {
                     );
                   },
                 ),
-
                 Consumer<ThemeProvider>(
                   builder: (context, themeProvider, child) {
-                    final isSystem = themeProvider.themeMode == ThemeMode.system;
+                    final isSystem =
+                        themeProvider.themeMode == ThemeMode.system;
                     final effectiveDark = isSystem
-                        ? MediaQuery.of(context).platformBrightness == Brightness.dark
+                        ? MediaQuery.of(context).platformBrightness ==
+                            Brightness.dark
                         : themeProvider.isDark;
 
                     return ListTile(
                       title: Text(effectiveDark ? 'Light Mode' : 'Dark Mode'),
-                      leading: Icon(effectiveDark ? Icons.light_mode : Icons.dark_mode),
+                      leading: Icon(
+                          effectiveDark ? Icons.light_mode : Icons.dark_mode),
                       onTap: () {
                         themeProvider.cycleThemeMode();
                         Navigator.pop(context);
@@ -141,7 +137,7 @@ class CVNavigationDrawer extends StatelessWidget {
                 SizedBox(width: 10),
                 SocialMediaIcon(
                   icon: FontAwesomeIcons.globe,
-                   url: AppUrls.website,
+                  url: AppUrls.website,
                 ),
               ],
             ),
@@ -165,8 +161,7 @@ class CVNavigationDrawer extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  ArticlesScreen(categoryName: category.name),
+              builder: (context) => ArticlesScreen(categoryName: category.name),
             ),
           );
         },
@@ -194,7 +189,6 @@ class CVNavigationDrawer extends StatelessWidget {
             );
           },
         ),
-
         ...category.subcategories.map((subCategory) {
           return Padding(
             padding: const EdgeInsets.only(left: 16),
